@@ -1,0 +1,41 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Nhân viên hành chính" as AdminStaff
+actor "Phụ huynh" as Parent
+actor "Ban giám hiệu" as Principal
+
+rectangle "Quản lý Tài chính Học phí" {
+
+    ' Hóa đơn học phí
+    usecase "Tạo hóa đơn học phí" as UC_CreateInvoice
+    usecase "Thiết lập mức phí" as UC_SetFeeRates
+    usecase "Theo dõi trạng thái thanh toán" as UC_TrackPaymentStatus
+    usecase "Tạo hóa đơn định kỳ" as UC_GenerateRecurringInvoices
+
+    ' Thanh toán
+    usecase "Xử lý thanh toán" as UC_ProcessPayment
+    usecase "Ghi nhận thanh toán" as UC_RecordPayment
+    usecase "Quản lý phương thức thanh toán" as UC_ManagePaymentMethods
+    usecase "Xử lý miễn giảm học phí" as UC_HandleDiscounts
+
+    ' Relationships
+    UC_CreateInvoice --> UC_SetFeeRates : <<include>>
+    UC_CreateInvoice <-- UC_GenerateRecurringInvoices : <<extend>>
+    UC_CreateInvoice --> UC_TrackPaymentStatus : <<include>>
+
+    UC_ProcessPayment --> UC_RecordPayment : <<include>>
+    UC_ProcessPayment --> UC_ManagePaymentMethods : <<include>>
+    UC_ProcessPayment <-- UC_HandleDiscounts : <<extend>>
+
+    ' Actors
+    AdminStaff --> UC_CreateInvoice
+    AdminStaff --> UC_ProcessPayment
+
+    Parent --> UC_ProcessPayment
+
+    Principal --> UC_TrackPaymentStatus
+}
+
+@enduml

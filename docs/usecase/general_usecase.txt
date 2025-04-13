@@ -1,0 +1,80 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Ban Giám Hiệu" as Principal
+actor "Giáo Viên" as Teacher
+actor "Học Sinh" as Student
+actor "Phụ Huynh" as Parent
+actor "Nhân viên hành chính" as AdminStaff
+
+usecase "Quản lý Thông tin Học sinh" as UC_StudentInfo
+usecase "Quản lý Lớp học & Thời khóa biểu" as UC_ClassSchedule
+usecase "Quản lý Điểm & Đánh giá" as UC_Grades
+usecase "Quản lý Kỷ luật & Hạnh kiểm" as UC_Discipline
+usecase "Quản lý Tài chính Học phí" as UC_Finance
+usecase "Quản lý Hoạt động Ngoại khóa" as UC_Extracurricular
+usecase "Giao tiếp & Thông báo" as UC_Communication
+usecase "Báo cáo & Phân tích Dữ liệu" as UC_Reporting
+usecase "Quản lý Tài khoản & Phân quyền" as UC_Account
+usecase "Tích hợp hệ thống ngoài" as UC_Integration
+
+usecase "Nhập điểm" as UC_EnterGrades
+usecase "Tính điểm trung bình" as UC_CalcAverage
+usecase "Thông báo kết quả" as UC_NotifyGrades
+usecase "Thanh toán học phí" as UC_Payment
+usecase "Tạo báo cáo tài chính" as UC_FinancialReport
+usecase "Xem kết quả học tập" as UC_ViewResults
+usecase "Gửi thông báo" as UC_SendNotification
+usecase "Gửi phản hồi" as UC_Feedback
+usecase "Xem lịch học & điểm danh" as UC_ViewSchedule
+usecase "Theo dõi con em" as UC_MonitorChild
+usecase "Xem báo cáo phân tích" as UC_ViewReport
+
+' include relationships
+UC_Grades --> (UC_EnterGrades) : <<include>>
+UC_Grades --> (UC_CalcAverage) : <<include>>
+UC_Grades --> (UC_NotifyGrades) : <<include>>
+
+UC_Finance --> (UC_Payment) : <<include>>
+UC_Finance --> (UC_FinancialReport) : <<include>>
+
+UC_Communication --> (UC_SendNotification) : <<include>>
+UC_Communication --> (UC_Feedback) : <<include>>
+
+UC_Reporting --> (UC_ViewReport) : <<include>>
+
+UC_ClassSchedule --> (UC_ViewSchedule) : <<include>>
+
+' extend relationships
+UC_ViewResults <.down. UC_Grades : <<extend>>
+UC_MonitorChild <.down. UC_ViewResults : <<extend>>
+UC_MonitorChild <.down. UC_Communication : <<extend>>
+
+' Actors use cases
+Principal --> UC_Reporting
+Principal --> UC_Account
+Principal --> UC_Integration
+
+Teacher --> UC_Grades
+Teacher --> UC_ClassSchedule
+Teacher --> UC_Communication
+Teacher --> UC_Discipline
+Teacher --> UC_Extracurricular
+
+Student --> UC_ViewResults
+Student --> UC_ViewSchedule
+Student --> UC_Extracurricular
+Student --> UC_Communication
+
+Parent --> UC_MonitorChild
+Parent --> UC_Payment
+Parent --> UC_Communication
+
+AdminStaff --> UC_StudentInfo
+AdminStaff --> UC_ClassSchedule
+AdminStaff --> UC_Finance
+AdminStaff --> UC_Account
+AdminStaff --> UC_Integration
+
+@enduml

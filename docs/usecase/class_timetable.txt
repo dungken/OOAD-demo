@@ -1,0 +1,43 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Nhân viên hành chính" as AdminStaff
+actor "Ban giám hiệu" as Principal
+
+rectangle "Quản lý Lớp học và Thời khóa biểu" {
+    
+    ' USE CASE: Tạo lớp và phân bổ học sinh
+    usecase "Tạo lớp học mới" as UC_CreateClass
+    usecase "Phân bổ học sinh vào lớp" as UC_AssignStudents
+    usecase "Kiểm tra tiêu chí phân bổ" as UC_CheckCriteria
+    usecase "Xử lý trường hợp đặc biệt" as UC_HandleExceptions
+
+    ' USE CASE: Quản lý thời khóa biểu
+    usecase "Tạo thời khóa biểu" as UC_CreateSchedule
+    usecase "Điều chỉnh thời khóa biểu" as UC_ModifySchedule
+    usecase "Phân công giáo viên" as UC_AssignTeachers
+    usecase "Kiểm tra xung đột lịch" as UC_CheckConflicts
+    usecase "Xử lý thay đổi lịch" as UC_HandleChanges
+
+    ' Các quan hệ include cho tạo lớp
+    UC_CreateClass --> UC_AssignStudents : <<include>>
+    UC_AssignStudents --> UC_CheckCriteria : <<include>>
+    UC_AssignStudents <-- UC_HandleExceptions : <<extend>>
+
+    ' Các quan hệ include cho tạo TKB
+    UC_CreateSchedule --> UC_AssignTeachers : <<include>>
+    UC_CreateSchedule --> UC_CheckConflicts : <<include>>
+    UC_ModifySchedule --> UC_CheckConflicts : <<include>>
+    UC_ModifySchedule --> UC_HandleChanges : <<include>>
+
+    ' Actor tương tác
+    AdminStaff --> UC_CreateClass
+    AdminStaff --> UC_ModifySchedule
+    AdminStaff --> UC_CreateSchedule
+
+    Principal --> UC_ModifySchedule
+    Principal --> UC_CreateClass
+}
+
+@enduml

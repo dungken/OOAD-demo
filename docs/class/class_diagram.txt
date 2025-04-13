@@ -1,0 +1,113 @@
+@startuml
+' Cấu hình font tiếng Việt nếu cần
+skinparam defaultFontName Arial
+
+' ==== CLASS DEFINITIONS ====
+class "Học sinh" {
+  +MaHocSinh: String
+  +HoTen: String
+  +NgaySinh: Date
+  +GioiTinh: String
+  +DiaChi: String
+  +SdtPhuHuynh: String
+  +EmailPhuHuynh: String
+  +LopHoc: String
+  +DiemTrungBinh: Float
+  +HanhKiem: String
+  +LichSuViPham: List<String>
+  +LichSuKhenThuong: List<String>
+  +HoSoSucKhoe: String
+  +TrangThai: String
+  +getThongTinHocSinh(): String
+  +capNhatThongTin(): void
+}
+
+class "Giáo viên" {
+  +MaGV: String
+  +HoTen: String
+  +ChuyenMon: String
+  +Email: String
+  +SoDienThoai: String
+  +NhapDiem(): void
+  +ChamDiem(): void
+  +ThucThiKyThi(): void
+  +TaoThongBao(): void
+}
+
+class "Lớp học" {
+  +MaLop: String
+  +TenLop: String
+  +DanhSachHocSinh: List<HocSinh>
+  +GiangVien: Giáo viên
+  +LichHoc: List<LichHoc>
+  +getThongTinLop(): String
+  +capNhatThongTinLop(): void
+}
+
+class "Lịch học" {
+  +Ngay: Date
+  +CaHoc: String
+  +PhongHoc: String
+  +MonHoc: String
+  +GiaoVien: Giáo viên
+}
+
+class "Điểm" {
+  +MaHocSinh: String
+  +MaMonHoc: String
+  +Diem: Float
+  +HinhThuc: String
+  +NgayThi: Date
+  +getDiem(): Float
+  +setDiem(): void
+}
+
+class "Kỷ luật" {
+  +MaHocSinh: String
+  +HanhViViPham: String
+  +HinhThucXuPhat: String
+  +MucDo: String
+  +NgayViPham: Date
+  +getLichSuViPham(): List<String>
+  +capNhatViPham(): void
+}
+
+class "Tài chính" {
+  +MaHocSinh: String
+  +HocPhi: Float
+  +KhoanThuKhac: Float
+  +TrangThaiThanhToan: String
+  +getThongTinThanhToan(): String
+  +ThanhToan(): void
+}
+
+class "Thông báo" {
+  +MaThongBao: String
+  +NoiDung: String
+  +NgayThongBao: Date
+  +LoaiThongBao: String
+  +DanhSachNhan: List<HocSinh>
+  +TaoThongBao(): void
+  +GuiThongBao(): void
+}
+
+class "Phụ huynh" {
+  +MaPhuHuynh: String
+  +HoTen: String
+  +Sdt: String
+  +Email: String
+  +getThongTinPhuHuynh(): String
+  +capNhatThongTinPhuHuynh(): void
+}
+
+' ==== RELATIONSHIPS ====
+"Học sinh" "1" -- "n" "Lớp học" : "Thuộc về"
+"Giáo viên" "1" -- "n" "Lớp học" : "Giảng dạy"
+"Lớp học" "1" -- "n" "Lịch học" : "Có"
+"Học sinh" "1" -- "n" "Điểm" : "Có điểm"
+"Học sinh" "1" -- "n" "Kỷ luật" : "Bị"
+"Học sinh" "1" -- "1" "Tài chính" : "Thanh toán"
+"Phụ huynh" "1" -- "n" "Học sinh" : "Có con"
+"Thông báo" "1" -- "n" "Học sinh" : "Gửi đến"
+
+@enduml

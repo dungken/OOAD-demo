@@ -1,0 +1,33 @@
+@startuml
+actor "Giáo viên" as Teacher
+boundary "Giao diện Nhập Điểm" as UI
+control "Kiểm tra Điểm" as CheckScores
+control "Tính Toán Điểm" as CalculateScores
+entity "Lưu Trữ Điểm" as Storage
+entity "Cơ sở dữ liệu Điểm" as DB
+
+Teacher -> UI : Nhập điểm cho học sinh
+UI -> CheckScores : Kiểm tra tính hợp lệ điểm
+CheckScores -> CheckScores : Kiểm tra các giá trị điểm (ví dụ: điểm trong khoảng cho phép)
+CheckScores --> UI : Kết quả kiểm tra (Hợp lệ/Không hợp lệ)
+
+alt Điểm không hợp lệ
+  UI -> Teacher : Hiển thị thông báo lỗi (Điểm không hợp lệ)
+else Điểm hợp lệ
+  UI -> CalculateScores : Gửi dữ liệu điểm để tính toán
+  CalculateScores -> CalculateScores : Tính toán điểm trung bình, xếp loại
+  CalculateScores --> UI : Kết quả tính toán điểm
+
+  UI -> Storage : Lưu trữ điểm học sinh
+  Storage -> DB : Lưu điểm vào cơ sở dữ liệu
+  DB --> Storage : Xác nhận lưu thành công
+
+  alt Lưu thành công
+    Storage --> UI : Thông báo "Điểm đã được lưu thành công"
+    UI -> Teacher : Hiển thị thông báo "Điểm đã được lưu thành công"
+  else Lưu thất bại
+    Storage --> UI : Thông báo lỗi lưu điểm
+    UI -> Teacher : Hiển thị thông báo lỗi lưu
+  end
+end
+@enduml

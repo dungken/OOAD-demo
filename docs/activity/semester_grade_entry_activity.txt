@@ -1,0 +1,33 @@
+@startuml
+start
+
+:Giáo viên đăng nhập hệ thống;
+
+:Chọn lớp và môn học phụ trách;
+
+:Nhập điểm cho từng học sinh (miệng, 15p, 1 tiết, thi...);
+
+:Kiểm tra lỗi nhập điểm (trống, sai định dạng...);
+
+if (Có lỗi?) then (Có)
+  :Hiển thị lỗi và yêu cầu chỉnh sửa;
+  :Giáo viên sửa lỗi;
+endif
+
+:Tính toán điểm trung bình theo quy định;
+
+:Giáo viên xem lại bảng điểm tổng hợp;
+
+:Trình bảng điểm cho phê duyệt;
+
+:Ban giám hiệu/phòng đào tạo phê duyệt bảng điểm;
+
+if (Được phê duyệt?) then (Có)
+  :Công bố kết quả học kỳ;
+else (Không)
+  :Thông báo yêu cầu chỉnh sửa lại;
+  :Quay lại bước nhập/sửa điểm;
+endif
+
+stop
+@enduml

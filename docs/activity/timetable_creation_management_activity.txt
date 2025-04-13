@@ -1,0 +1,55 @@
+@startuml
+start
+
+:Thu thập danh sách môn học cần giảng dạy;
+:Thu thập danh sách giáo viên và phân môn phụ trách;
+:Thu thập danh sách lớp học và sĩ số;
+:Thu thập thông tin phòng học (sức chứa, trang bị);
+
+:Khởi tạo khung thời khóa biểu sơ bộ;
+:Phân bổ môn học cho từng lớp;
+
+:Phân công giáo viên cho từng lớp/môn;
+:Phân bổ phòng học cho từng tiết;
+
+:Kiểm tra xung đột thời gian của giáo viên;
+
+if (Giáo viên bị trùng lịch?) then (Có)
+  :Gợi ý thay đổi giáo viên hoặc chuyển tiết học;
+  -> Kiểm tra xung đột thời gian của giáo viên;
+else (Không)
+  :Tiếp tục kiểm tra;
+endif
+
+:Kiểm tra xung đột phòng học;
+
+if (Phòng học bị trùng?) then (Có)
+  :Gợi ý chuyển phòng hoặc dời tiết học;
+  -> Kiểm tra xung đột phòng học;
+else (Không)
+  :Tiếp tục kiểm tra;
+endif
+
+:Kiểm tra trùng lịch giữa các lớp học (nếu có học sinh học chéo lớp);
+
+if (Có trùng lịch lớp học?) then (Có)
+  :Gợi ý điều chỉnh môn học hoặc tiết học;
+  -> Kiểm tra trùng lịch giữa các lớp học;
+endif
+
+:Khi không còn xung đột;
+:Trình thời khóa biểu lên Ban giám hiệu;
+
+:Ban giám hiệu xem xét và phê duyệt;
+
+if (Phê duyệt?) then (Có)
+  :Công bố thời khóa biểu trên hệ thống;
+  :Gửi thông báo tới giáo viên, học sinh, phụ huynh;
+  :Lưu phiên bản thời khóa biểu đã phê duyệt;
+else (Không)
+  :Gửi yêu cầu điều chỉnh về lại cho bộ phận học vụ;
+  -> Khởi tạo khung thời khóa biểu sơ bộ;
+endif
+
+stop
+@enduml

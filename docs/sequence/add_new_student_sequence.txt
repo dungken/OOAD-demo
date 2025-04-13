@@ -1,0 +1,29 @@
+@startuml
+actor "Nhân viên Hành chính" as Staff
+boundary "Giao diện Thêm mới Học sinh" as UI
+control "Kiểm tra Dữ liệu" as Validator
+entity "Lưu Trữ Học Sinh" as Storage
+boundary "Giao diện Thông báo" as Notify
+entity "Cơ sở dữ liệu Học Sinh" as DB
+
+Staff -> UI : Nhập thông tin học sinh
+UI -> Validator : Gửi thông tin học sinh cần kiểm tra
+Validator -> Validator : Kiểm tra tính hợp lệ thông tin (ví dụ: email, số điện thoại)
+Validator --> UI : Kết quả kiểm tra (Hợp lệ/Không hợp lệ)
+
+alt Dữ liệu không hợp lệ
+  UI -> Notify : Hiển thị thông báo lỗi (Lý do không hợp lệ)
+else Dữ liệu hợp lệ
+  UI -> Storage : Gửi yêu cầu lưu thông tin học sinh
+  Storage -> DB : Lưu thông tin học sinh vào cơ sở dữ liệu
+  DB --> Storage : Xác nhận lưu thành công
+  
+  alt Lưu thành công
+    Storage --> UI : Thông báo “Thêm mới thành công”
+    UI -> Notify : Hiển thị thông báo “Học sinh đã được thêm thành công”
+  else Lưu thất bại
+    Storage --> UI : Thông báo lỗi lưu
+    UI -> Notify : Hiển thị thông báo lỗi lưu
+  end
+end
+@enduml

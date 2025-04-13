@@ -1,0 +1,46 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Nhân viên hành chính" as AdminStaff
+
+rectangle "Quản lý Thông tin Học sinh" {
+    
+    usecase "Thêm mới học sinh" as UC_AddStudent
+    usecase "Nhập thông tin cá nhân" as UC_EnterPersonalInfo
+    usecase "Nhập thông tin gia đình" as UC_EnterFamilyInfo
+    usecase "Nhập thông tin sức khỏe" as UC_EnterHealthInfo
+    usecase "Nhập học bạ cũ" as UC_EnterAcademicHistory
+    usecase "Tải lên hồ sơ đính kèm" as UC_UploadDocuments
+    usecase "Kiểm tra dữ liệu nhập vào" as UC_ValidateData
+    
+    usecase "Cập nhật thông tin học sinh" as UC_UpdateStudent
+    usecase "Lưu lịch sử thay đổi" as UC_SaveChangeLog
+
+    usecase "Chuyển trường/Xóa học sinh" as UC_TransferOrDelete
+    usecase "Tạo giấy tờ liên quan" as UC_GenerateDocuments
+    usecase "Cập nhật trạng thái học sinh" as UC_UpdateStatus
+
+    ' Các quan hệ include cho thêm mới học sinh
+    UC_AddStudent --> UC_EnterPersonalInfo : <<include>>
+    UC_AddStudent --> UC_EnterFamilyInfo : <<include>>
+    UC_AddStudent --> UC_EnterHealthInfo : <<include>>
+    UC_AddStudent --> UC_EnterAcademicHistory : <<include>>
+    UC_AddStudent --> UC_UploadDocuments : <<include>>
+    UC_AddStudent --> UC_ValidateData : <<include>>
+
+    ' Cập nhật cũng bao gồm kiểm tra dữ liệu
+    UC_UpdateStudent --> UC_ValidateData : <<include>>
+    UC_UpdateStudent --> UC_SaveChangeLog : <<include>>
+
+    ' Chuyển trường/xoá học sinh
+    UC_TransferOrDelete --> UC_GenerateDocuments : <<include>>
+    UC_TransferOrDelete --> UC_UpdateStatus : <<include>>
+
+    ' Actor tương tác
+    AdminStaff --> UC_AddStudent
+    AdminStaff --> UC_UpdateStudent
+    AdminStaff --> UC_TransferOrDelete
+}
+
+@enduml

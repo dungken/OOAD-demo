@@ -1,0 +1,24 @@
+@startuml
+actor "Phụ huynh" as Parent
+boundary "Giao diện Thanh toán" as PaymentUI
+control "Xử lý Thanh toán" as PaymentProcessor
+control "Cổng Thanh toán" as PaymentGateway
+control "Cập nhật Tài chính" as FinanceUpdater
+
+Parent -> PaymentUI : Xem hóa đơn học phí
+PaymentUI -> Parent : Hiển thị thông tin hóa đơn
+Parent -> PaymentUI : Chọn phương thức thanh toán (visa, momo, bank transfer, etc.)
+PaymentUI -> PaymentProcessor : Gửi yêu cầu thanh toán
+PaymentProcessor -> PaymentGateway : Liên kết với cổng thanh toán
+PaymentGateway -> PaymentGateway : Xử lý thanh toán
+PaymentGateway --> PaymentProcessor : Trả về kết quả thanh toán
+alt Thành công
+    PaymentProcessor -> FinanceUpdater : Cập nhật thông tin tài chính (đã thanh toán)
+    FinanceUpdater -> FinanceUpdater : Lưu thông tin thanh toán vào hệ thống
+    FinanceUpdater --> PaymentUI : Cập nhật trạng thái thanh toán thành công
+    PaymentUI --> Parent : Thông báo thanh toán thành công
+else Thất bại
+    PaymentProcessor --> PaymentUI : Thông báo lỗi thanh toán
+    PaymentUI --> Parent : Thông báo lỗi thanh toán
+end
+@enduml

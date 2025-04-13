@@ -1,0 +1,48 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Giáo viên" as Teacher
+actor "Ban giám hiệu" as Principal
+actor "Nhân viên hành chính" as AdminStaff
+
+' Nhập điểm
+usecase "Nhập điểm" as UC_EnterGrades
+usecase "Nhập điểm từ file" as UC_ImportGradesFromFile
+usecase "Kiểm tra tính hợp lệ điểm" as UC_ValidateGrades
+
+' Tính toán điểm trung bình & xếp loại
+usecase "Tính điểm trung bình" as UC_CalculateAverage
+usecase "Xếp loại học sinh" as UC_ClassifyStudents
+usecase "Xử lý thang điểm khác nhau" as UC_HandleGradingScales
+
+' Quản lý kỳ thi
+usecase "Tạo lịch thi" as UC_CreateExamSchedule
+usecase "Phân công giám thị" as UC_AssignSupervisors
+usecase "In danh sách thi" as UC_PrintExamList
+usecase "Nhập và công bố kết quả thi" as UC_EnterAndAnnounceResults
+
+' Relationships
+UC_EnterGrades --> UC_ValidateGrades : <<include>>
+UC_EnterGrades <-- UC_ImportGradesFromFile : <<extend>>
+
+UC_CalculateAverage --> UC_HandleGradingScales : <<include>>
+UC_ClassifyStudents --> UC_CalculateAverage : <<include>>
+
+UC_CreateExamSchedule --> UC_AssignSupervisors : <<include>>
+UC_CreateExamSchedule --> UC_PrintExamList : <<include>>
+UC_EnterAndAnnounceResults --> UC_ValidateGrades : <<include>>
+
+' Actors
+Teacher --> UC_EnterGrades
+Teacher --> UC_EnterAndAnnounceResults
+Teacher --> UC_CalculateAverage
+Teacher --> UC_ClassifyStudents
+
+Principal --> UC_ClassifyStudents
+Principal --> UC_CreateExamSchedule
+
+AdminStaff --> UC_CreateExamSchedule
+AdminStaff --> UC_PrintExamList
+
+@enduml

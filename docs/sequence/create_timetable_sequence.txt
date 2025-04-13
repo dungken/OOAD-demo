@@ -1,0 +1,22 @@
+@startuml
+actor "Nhân viên Hành chính" as Admin
+boundary "Giao diện Quản lý Thời khóa biểu" as UI
+control "Xử lý Lịch" as ScheduleProcessor
+control "Kiểm tra Xung đột" as ConflictChecker
+control "Lưu Trữ Thời khóa biểu" as ScheduleStorage
+
+Admin -> UI : Chọn môn học, giáo viên, phòng học, thời gian
+UI -> ScheduleProcessor : Tạo lịch cho các môn học
+ScheduleProcessor -> ConflictChecker : Kiểm tra xung đột lịch
+ConflictChecker -> ConflictChecker : Kiểm tra xem có xung đột lịch không
+ConflictChecker --> ScheduleProcessor : Trả về kết quả kiểm tra
+alt Không có xung đột
+    ScheduleProcessor -> ScheduleStorage : Lưu thời khóa biểu
+    ScheduleStorage -> ScheduleStorage : Lưu thông tin thời khóa biểu
+    ScheduleStorage --> UI : Xác nhận lưu thành công
+    UI --> Admin : Thông báo lịch đã được tạo thành công
+else Có xung đột
+    ScheduleProcessor -> UI : Thông báo xung đột lịch
+    UI --> Admin : Thông báo lỗi xung đột
+end
+@enduml

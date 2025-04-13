@@ -1,0 +1,29 @@
+@startuml
+start
+
+:Phụ huynh đăng nhập hệ thống;
+:Xem danh sách hóa đơn học phí;
+:Chọn hóa đơn cần thanh toán;
+
+:Chọn phương thức thanh toán;
+partition "Cổng thanh toán" {
+  :Chuyển đến giao diện cổng thanh toán;
+  :Nhập thông tin thanh toán (thẻ ATM/Visa, MoMo, v.v...);
+  :Gửi yêu cầu xác thực OTP;
+  :Người dùng nhập mã OTP;
+  :Gửi OTP xác thực giao dịch;
+}
+
+:Nhận kết quả từ cổng thanh toán;
+
+if (Giao dịch thành công?) then (Có)
+  :Cập nhật trạng thái hóa đơn là "Đã thanh toán";
+  :Gửi thông báo xác nhận đến phụ huynh (Email/SMS);
+  :Lưu lịch sử thanh toán;
+else (Không)
+  :Hiển thị lỗi và lý do giao dịch thất bại;
+  :Cho phép thanh toán lại;
+endif
+
+stop
+@enduml

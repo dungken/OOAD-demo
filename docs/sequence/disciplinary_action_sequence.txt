@@ -1,0 +1,34 @@
+@startuml
+actor "Giáo viên" as Teacher
+boundary "Giao diện Ghi nhận Vi phạm" as UI
+control "Lưu Trữ Vi phạm" as StoreViolation
+control "Hệ thống Thông báo" as NotificationSystem
+actor "Hiệu trưởng" as Principal
+
+Teacher -> UI : Ghi nhận vi phạm kỷ luật
+UI -> StoreViolation : Lưu thông tin vi phạm
+StoreViolation -> StoreViolation : Kiểm tra thông tin vi phạm
+StoreViolation --> UI : Xác nhận vi phạm đã được ghi nhận
+
+alt Vi phạm cần phê duyệt từ Hiệu trưởng
+    UI -> Principal : Yêu cầu phê duyệt vi phạm
+    Principal -> Principal : Xem xét vi phạm
+    Principal --> UI : Phê duyệt hoặc từ chối
+    alt Phê duyệt
+        UI -> NotificationSystem : Gửi thông báo cho giáo viên và học sinh
+        NotificationSystem -> NotificationSystem : Tạo thông báo phê duyệt
+        NotificationSystem --> Teacher : Thông báo vi phạm đã được phê duyệt
+        NotificationSystem --> UI : Thông báo đã gửi
+    else Từ chối
+        UI -> NotificationSystem : Gửi thông báo từ chối
+        NotificationSystem -> NotificationSystem : Tạo thông báo từ chối
+        NotificationSystem --> Teacher : Thông báo vi phạm bị từ chối
+        NotificationSystem --> UI : Thông báo đã gửi
+    end
+else Vi phạm không cần phê duyệt
+    UI -> NotificationSystem : Gửi thông báo ngay lập tức
+    NotificationSystem -> NotificationSystem : Tạo thông báo vi phạm
+    NotificationSystem --> Teacher : Thông báo vi phạm đã được ghi nhận
+    NotificationSystem --> UI : Thông báo đã gửi
+end
+@enduml

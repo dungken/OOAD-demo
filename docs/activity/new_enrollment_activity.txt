@@ -1,0 +1,31 @@
+@startuml
+start
+
+:Phụ huynh nộp hồ sơ;
+if (Hồ sơ nộp online?) then (Có)
+  :Gửi hồ sơ qua cổng tuyển sinh online;
+else (Không)
+  :Gửi hồ sơ trực tiếp tại trường;
+endif
+
+:Tiếp nhận và nhập liệu hồ sơ vào hệ thống;
+
+:Kiểm tra tính hợp lệ của hồ sơ;
+if (Hồ sơ hợp lệ?) then (Có)
+  :Chuyển hồ sơ đến Ban giám hiệu/phòng tuyển sinh;
+  :Phê duyệt hồ sơ;
+  if (Hồ sơ được phê duyệt?) then (Có)
+    :Tạo tài khoản học sinh;
+    :Thông báo kết quả nhập học cho phụ huynh;
+    :Tạo hóa đơn học phí;
+    :Phụ huynh đóng học phí;
+    :Xác nhận hoàn tất nhập học;
+  else (Không)
+    :Thông báo từ chối và lý do cho phụ huynh;
+  endif
+else (Không)
+  :Thông báo yêu cầu bổ sung hồ sơ;
+endif
+
+stop
+@enduml

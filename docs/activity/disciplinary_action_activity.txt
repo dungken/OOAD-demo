@@ -1,0 +1,23 @@
+@startuml
+start
+
+:Ghi nhận vi phạm kỷ luật;
+:Thông báo vi phạm cho học sinh và phụ huynh;
+
+:Giáo viên/nhân viên đề xuất hình thức xử lý;
+
+:Chuyển đề xuất đến Ban giám hiệu/phòng kỷ luật;
+
+:Phê duyệt hình thức xử lý;
+
+if (Được phê duyệt?) then (Có)
+  :Thực hiện xử lý (nhắc nhở, cảnh cáo, hạ hạnh kiểm...);
+  :Gửi thông báo chính thức cho phụ huynh;
+  :Lưu lịch sử vi phạm và xử lý vào hồ sơ học sinh;
+else (Không)
+  :Yêu cầu chỉnh sửa hoặc bổ sung thông tin vi phạm;
+  :Quay lại bước đề xuất xử lý;
+endif
+
+stop
+@enduml
