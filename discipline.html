@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Kỷ luật - SSMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 text-white shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold flex items-center group">
+                        <div class="bg-white p-3 rounded-xl mr-3 transform group-hover:rotate-12 transition duration-300">
+                            <i class="fas fa-graduation-cap text-blue-600 text-2xl"></i>
+                        </div>
+                        <span class="text-white">SSMS</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="nav-link">Trang chủ</a>
+                    <a href="students.html" class="nav-link">Quản lý học sinh</a>
+                    <a href="classes.html" class="nav-link">Lớp học</a>
+                    <a href="grades.html" class="nav-link">Điểm số</a>
+                    <a href="discipline.html" class="nav-link font-medium">Kỷ luật</a>
+                    <a href="finance.html" class="nav-link">Tài chính</a>
+                    <a href="activities.html" class="nav-link">Hoạt động</a>
+                    <a href="reports.html" class="nav-link">Báo cáo</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition duration-300 flex items-center group">
+                        <i class="fas fa-user mr-2 group-hover:rotate-12 transition duration-300"></i>
+                        Đăng nhập
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Page Header -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Quản lý Kỷ luật</h1>
+            <button onclick="openModal('addDisciplineModal')" class="btn-primary">
+                <i class="fas fa-plus mr-2"></i>Thêm vi phạm
+            </button>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tổng vi phạm</p>
+                        <h3 class="text-2xl font-bold text-red-600">24</h3>
+                    </div>
+                    <div class="bg-red-100 p-3 rounded-full">
+                        <i class="fas fa-exclamation-triangle text-red-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-red-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>3</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Vi phạm nghiêm trọng</p>
+                        <h3 class="text-2xl font-bold text-orange-600">5</h3>
+                    </div>
+                    <div class="bg-orange-100 p-3 rounded-full">
+                        <i class="fas fa-exclamation-circle text-orange-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-orange-500 text-sm"><i class="fas fa-arrow-down mr-1"></i>2</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Học sinh vi phạm</p>
+                        <h3 class="text-2xl font-bold text-yellow-600">18</h3>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-user-shield text-yellow-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-yellow-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>4</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tỷ lệ cải thiện</p>
+                        <h3 class="text-2xl font-bold text-green-600">75%</h3>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-chart-line text-green-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>10%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <select class="form-input">
+                        <option value="">Lớp</option>
+                        <option value="10A1">10A1</option>
+                        <option value="10A2">10A2</option>
+                        <option value="10A3">10A3</option>
+                        <option value="11A1">11A1</option>
+                        <option value="11A2">11A2</option>
+                        <option value="12A1">12A1</option>
+                    </select>
+                </div>
+                <div>
+                    <select class="form-input">
+                        <option value="">Loại vi phạm</option>
+                        <option value="ATTENDANCE">Đi học muộn</option>
+                        <option value="UNIFORM">Vi phạm đồng phục</option>
+                        <option value="BEHAVIOR">Hành vi không đúng</option>
+                        <option value="ACADEMIC">Vi phạm học tập</option>
+                    </select>
+                </div>
+                <div>
+                    <select class="form-input">
+                        <option value="">Mức độ</option>
+                        <option value="LIGHT">Nhẹ</option>
+                        <option value="MEDIUM">Trung bình</option>
+                        <option value="SERIOUS">Nghiêm trọng</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="month" class="form-input" value="2024-03">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs for different views -->
+        <div class="bg-white rounded-lg shadow-md mb-6">
+            <div class="border-b border-gray-200">
+                <nav class="flex -mb-px">
+                    <button class="tab-button active py-4 px-6 text-blue-600 border-b-2 border-blue-600 font-medium">
+                        Danh sách vi phạm
+                    </button>
+                    <button class="tab-button py-4 px-6 text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium">
+                        Biểu đồ
+                    </button>
+                    <button class="tab-button py-4 px-6 text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium">
+                        Thống kê
+                    </button>
+                </nav>
+            </div>
+            <div class="p-4">
+                <!-- Tab Content: Danh sách vi phạm -->
+                <div id="tableTab" class="tab-content active">
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Mã học sinh</th>
+                                    <th>Họ và tên</th>
+                                    <th>Lớp</th>
+                                    <th>Loại vi phạm</th>
+                                    <th>Mức độ</th>
+                                    <th>Ngày vi phạm</th>
+                                    <th>Hình thức xử lý</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>HS001</td>
+                                    <td>Nguyễn Văn An</td>
+                                    <td>10A1</td>
+                                    <td>Đi học muộn</td>
+                                    <td><span class="badge badge-warning">Trung bình</span></td>
+                                    <td>15/03/2024</td>
+                                    <td>Khiển trách</td>
+                                    <td><span class="badge badge-success">Đã xử lý</span></td>
+                                    <td>
+                                        <button onclick="openModal('editViolationModal')" class="text-blue-600 hover:text-blue-800 mr-2">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteViolation('VP001')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HS002</td>
+                                    <td>Trần Thị Bình</td>
+                                    <td>10A1</td>
+                                    <td>Vi phạm đồng phục</td>
+                                    <td><span class="badge badge-warning">Trung bình</span></td>
+                                    <td>16/03/2024</td>
+                                    <td>Khiển trách</td>
+                                    <td><span class="badge badge-success">Đã xử lý</span></td>
+                                    <td>
+                                        <button onclick="openModal('editViolationModal')" class="text-blue-600 hover:text-blue-800 mr-2">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteViolation('VP002')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HS003</td>
+                                    <td>Lê Văn Cường</td>
+                                    <td>10A1</td>
+                                    <td>Hành vi không đúng</td>
+                                    <td><span class="badge badge-danger">Nghiêm trọng</span></td>
+                                    <td>17/03/2024</td>
+                                    <td>Cảnh cáo</td>
+                                    <td><span class="badge badge-warning">Đang xử lý</span></td>
+                                    <td>
+                                        <button onclick="openModal('editViolationModal')" class="text-blue-600 hover:text-blue-800 mr-2">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteViolation('VP003')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HS004</td>
+                                    <td>Phạm Thị Dung</td>
+                                    <td>10A2</td>
+                                    <td>Vi phạm học tập</td>
+                                    <td><span class="badge badge-warning">Trung bình</span></td>
+                                    <td>18/03/2024</td>
+                                    <td>Khiển trách</td>
+                                    <td><span class="badge badge-success">Đã xử lý</span></td>
+                                    <td>
+                                        <button onclick="openModal('editViolationModal')" class="text-blue-600 hover:text-blue-800 mr-2">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteViolation('VP004')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HS005</td>
+                                    <td>Hoàng Văn Em</td>
+                                    <td>10A2</td>
+                                    <td>Đi học muộn</td>
+                                    <td><span class="badge badge-info">Nhẹ</span></td>
+                                    <td>19/03/2024</td>
+                                    <td>Nhắc nhở</td>
+                                    <td><span class="badge badge-success">Đã xử lý</span></td>
+                                    <td>
+                                        <button onclick="openModal('editViolationModal')" class="text-blue-600 hover:text-blue-800 mr-2">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteViolation('VP005')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Biểu đồ -->
+                <div id="chartTab" class="tab-content hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <h3 class="text-lg font-semibold mb-4">Phân bố vi phạm theo loại</h3>
+                            <canvas id="violationTypeChart" height="250"></canvas>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <h3 class="text-lg font-semibold mb-4">Xu hướng vi phạm theo thời gian</h3>
+                            <canvas id="violationTrendChart" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Thống kê -->
+                <div id="statsTab" class="tab-content hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <h3 class="text-lg font-semibold mb-4">Thống kê theo lớp</h3>
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Lớp</th>
+                                            <th>Tổng vi phạm</th>
+                                            <th>Nghiêm trọng</th>
+                                            <th>Trung bình</th>
+                                            <th>Nhẹ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>10A1</td>
+                                            <td>12</td>
+                                            <td>2</td>
+                                            <td>6</td>
+                                            <td>4</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10A2</td>
+                                            <td>8</td>
+                                            <td>1</td>
+                                            <td>4</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10A3</td>
+                                            <td>4</td>
+                                            <td>0</td>
+                                            <td>2</td>
+                                            <td>2</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <h3 class="text-lg font-semibold mb-4">Thống kê theo loại vi phạm</h3>
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Loại vi phạm</th>
+                                            <th>Số lượng</th>
+                                            <th>Tỷ lệ</th>
+                                            <th>Xu hướng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Đi học muộn</td>
+                                            <td>10</td>
+                                            <td>42%</td>
+                                            <td><span class="text-red-500"><i class="fas fa-arrow-up"></i> 20%</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Vi phạm đồng phục</td>
+                                            <td>6</td>
+                                            <td>25%</td>
+                                            <td><span class="text-green-500"><i class="fas fa-arrow-down"></i> 10%</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Hành vi không đúng</td>
+                                            <td>5</td>
+                                            <td>21%</td>
+                                            <td><span class="text-red-500"><i class="fas fa-arrow-up"></i> 5%</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Vi phạm học tập</td>
+                                            <td>3</td>
+                                            <td>12%</td>
+                                            <td><span class="text-green-500"><i class="fas fa-arrow-down"></i> 15%</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-6">
+            <nav class="flex items-center space-x-2">
+                <button class="btn-secondary px-3 py-1">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="btn-primary px-3 py-1">1</button>
+                <button class="btn-secondary px-3 py-1">2</button>
+                <button class="btn-secondary px-3 py-1">3</button>
+                <button class="btn-secondary px-3 py-1">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </nav>
+        </div>
+    </main>
+
+    <!-- Add Discipline Modal -->
+    <div id="addDisciplineModal" class="modal hidden">
+        <div class="modal-content max-w-4xl mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Thêm biện pháp kỷ luật</h2>
+                    <p class="text-gray-600 mt-1">Nhập thông tin kỷ luật cho học sinh</p>
+                </div>
+                <button class="modal-close text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addDisciplineForm" class="space-y-6">
+                <!-- Student Information -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                        <i class="fas fa-user-graduate mr-2 text-blue-600"></i>
+                        Thông tin học sinh
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="form-label required">Học sinh</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-user text-gray-400"></i>
+                                </div>
+                                <select name="student" class="form-input pl-10" required>
+                                    <option value="">Chọn học sinh</option>
+                                    <option value="1">Nguyễn Văn A - 10A1</option>
+                                    <option value="2">Trần Thị B - 10A2</option>
+                                    <option value="3">Lê Văn C - 10A3</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label required">Lớp</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-chalkboard text-gray-400"></i>
+                                </div>
+                                <select name="class" class="form-input pl-10" required>
+                                    <option value="">Chọn lớp</option>
+                                    <option value="10A1">10A1</option>
+                                    <option value="10A2">10A2</option>
+                                    <option value="10A3">10A3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Discipline Information -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-2 text-yellow-600"></i>
+                        Thông tin vi phạm
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="form-label required">Loại vi phạm</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-exclamation-circle text-gray-400"></i>
+                                </div>
+                                <select name="violationType" class="form-input pl-10" required>
+                                    <option value="">Chọn loại vi phạm</option>
+                                    <option value="attendance">Vắng học không phép</option>
+                                    <option value="behavior">Vi phạm nội quy</option>
+                                    <option value="uniform">Đồng phục không đúng quy định</option>
+                                    <option value="other">Vi phạm khác</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label required">Mức độ</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-level-up-alt text-gray-400"></i>
+                                </div>
+                                <select name="severity" class="form-input pl-10" required>
+                                    <option value="">Chọn mức độ</option>
+                                    <option value="light">Nhẹ</option>
+                                    <option value="medium">Trung bình</option>
+                                    <option value="serious">Nghiêm trọng</option>
+                                    <option value="very-serious">Rất nghiêm trọng</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label required">Ngày vi phạm</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-calendar text-gray-400"></i>
+                                </div>
+                                <input type="date" name="date" class="form-input pl-10" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label required">Điểm trừ</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-minus-circle text-gray-400"></i>
+                                </div>
+                                <input type="number" name="points" class="form-input pl-10" min="0" max="100" required placeholder="Nhập số điểm trừ">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                        <i class="fas fa-info-circle mr-2 text-blue-600"></i>
+                        Thông tin bổ sung
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="form-label required">Mô tả chi tiết</label>
+                            <div class="relative">
+                                <div class="absolute top-3 left-3 pointer-events-none">
+                                    <i class="fas fa-align-left text-gray-400"></i>
+                                </div>
+                                <textarea name="description" rows="4" class="form-input pl-10" placeholder="Mô tả chi tiết về hành vi vi phạm..." required></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label required">Biện pháp xử lý</label>
+                            <div class="relative">
+                                <div class="absolute top-3 left-3 pointer-events-none">
+                                    <i class="fas fa-gavel text-gray-400"></i>
+                                </div>
+                                <textarea name="action" rows="4" class="form-input pl-10" placeholder="Nhập biện pháp xử lý..." required></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Ghi chú</label>
+                            <div class="relative">
+                                <div class="absolute top-3 left-3 pointer-events-none">
+                                    <i class="fas fa-comment text-gray-400"></i>
+                                </div>
+                                <textarea name="notes" rows="2" class="form-input pl-10" placeholder="Ghi chú thêm (nếu có)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Parent Notification -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                        <i class="fas fa-envelope mr-2 text-green-600"></i>
+                        Thông báo phụ huynh
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="notifyParent" name="notifyParent" class="form-checkbox h-4 w-4 text-blue-600">
+                            <label for="notifyParent" class="ml-2 text-gray-700">Gửi thông báo cho phụ huynh</label>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="parentNotificationFields">
+                            <div>
+                                <label class="form-label">Phương thức thông báo</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-bell text-gray-400"></i>
+                                    </div>
+                                    <select name="notificationMethod" class="form-input pl-10">
+                                        <option value="">Chọn phương thức</option>
+                                        <option value="email">Email</option>
+                                        <option value="sms">SMS</option>
+                                        <option value="letter">Thư thông báo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Ngày hẹn gặp (nếu cần)</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-calendar-alt text-gray-400"></i>
+                                    </div>
+                                    <input type="date" name="meetingDate" class="form-input pl-10">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button type="button" onclick="closeModal('addDisciplineModal')" class="btn-secondary">
+                        <i class="fas fa-times mr-2"></i>Hủy
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save mr-2"></i>Lưu thông tin
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Violation Modal -->
+    <div id="editViolationModal" class="modal hidden">
+        <!-- Similar structure to Add Violation Modal -->
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Tab handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active', 'text-blue-600', 'border-blue-600'));
+                    tabButtons.forEach(btn => btn.classList.add('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'));
+                    tabContents.forEach(content => content.classList.add('hidden'));
+                    
+                    // Add active class to clicked button and corresponding content
+                    button.classList.add('active', 'text-blue-600', 'border-blue-600');
+                    button.classList.remove('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                    tabContents[index].classList.remove('hidden');
+                    
+                    // Initialize charts if on chart tab
+                    if (index === 1) {
+                        initializeCharts();
+                    }
+                });
+            });
+            
+            // Initialize charts on page load if chart tab is active
+            if (document.querySelector('#chartTab').classList.contains('active')) {
+                initializeCharts();
+            }
+        });
+        
+        // Initialize charts
+        function initializeCharts() {
+            // Violation Type Chart
+            const typeCtx = document.getElementById('violationTypeChart').getContext('2d');
+            new Chart(typeCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Đi học muộn', 'Vi phạm đồng phục', 'Hành vi không đúng', 'Vi phạm học tập'],
+                    datasets: [{
+                        data: [10, 6, 5, 3],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)',
+                            'rgba(75, 192, 192, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+            
+            // Violation Trend Chart
+            const trendCtx = document.getElementById('violationTrendChart').getContext('2d');
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+                    datasets: [{
+                        label: 'Số vi phạm',
+                        data: [15, 18, 12, 9, 11, 14, 16, 13, 10, 8, 12, 24],
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html> 

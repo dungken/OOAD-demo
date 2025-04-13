@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Học sinh - SSMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 text-white shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold flex items-center group">
+                        <div class="bg-white p-3 rounded-xl mr-3 transform group-hover:rotate-12 transition duration-300">
+                            <i class="fas fa-graduation-cap text-blue-600 text-2xl"></i>
+                        </div>
+                        <span class="text-white">SSMS</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="nav-link">Trang chủ</a>
+                    <a href="students.html" class="nav-link font-medium">Quản lý học sinh</a>
+                    <a href="classes.html" class="nav-link">Lớp học</a>
+                    <a href="grades.html" class="nav-link">Điểm số</a>
+                    <a href="discipline.html" class="nav-link">Kỷ luật</a>
+                    <a href="finance.html" class="nav-link">Tài chính</a>
+                    <a href="activities.html" class="nav-link">Hoạt động</a>
+                    <a href="reports.html" class="nav-link">Báo cáo</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition duration-300 flex items-center group">
+                        <i class="fas fa-user mr-2 group-hover:rotate-12 transition duration-300"></i>
+                        Đăng nhập
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Add Student Modal -->
+        <div id="addStudentModal" class="modal hidden">
+            <div class="modal-content max-w-4xl mx-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Thêm học sinh mới</h2>
+                        <p class="text-gray-600 mt-1">Nhập thông tin học sinh mới vào hệ thống</p>
+                    </div>
+                    <button class="modal-close text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="addStudentForm" class="space-y-6">
+                    <!-- Personal Information Section -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                            <i class="fas fa-user-circle mr-2 text-blue-600"></i>
+                            Thông tin cá nhân
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="form-label required">Mã học sinh</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-id-card text-gray-400"></i>
+                                    </div>
+                                    <input type="text" name="studentId" class="form-input pl-10" placeholder="Nhập mã học sinh" required>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Mã học sinh sẽ được sử dụng để đăng nhập</p>
+                            </div>
+                            <div>
+                                <label class="form-label required">Họ và tên</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-user text-gray-400"></i>
+                                    </div>
+                                    <input type="text" name="fullName" class="form-input pl-10" placeholder="Nhập họ và tên" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label required">Email</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-envelope text-gray-400"></i>
+                                    </div>
+                                    <input type="email" name="email" class="form-input pl-10" placeholder="email@example.com" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label required">Số điện thoại</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-phone text-gray-400"></i>
+                                    </div>
+                                    <input type="tel" name="phone" class="form-input pl-10" placeholder="0987654321" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label required">Ngày sinh</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-calendar text-gray-400"></i>
+                                    </div>
+                                    <input type="date" name="birthDate" class="form-input pl-10" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label required">Giới tính</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-venus-mars text-gray-400"></i>
+                                    </div>
+                                    <select name="gender" class="form-input pl-10" required>
+                                        <option value="">Chọn giới tính</option>
+                                        <option value="male">Nam</option>
+                                        <option value="female">Nữ</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Academic Information Section -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                            <i class="fas fa-graduation-cap mr-2 text-blue-600"></i>
+                            Thông tin học tập
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="form-label required">Lớp</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-chalkboard text-gray-400"></i>
+                                    </div>
+                                    <select name="class" class="form-input pl-10" required>
+                                        <option value="">Chọn lớp</option>
+                                        <option value="10A1">10A1</option>
+                                        <option value="10A2">10A2</option>
+                                        <option value="10A3">10A3</option>
+                                        <option value="11A1">11A1</option>
+                                        <option value="11A2">11A2</option>
+                                        <option value="11A3">11A3</option>
+                                        <option value="12A1">12A1</option>
+                                        <option value="12A2">12A2</option>
+                                        <option value="12A3">12A3</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Khối</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-layer-group text-gray-400"></i>
+                                    </div>
+                                    <select name="grade" class="form-input pl-10">
+                                        <option value="">Chọn khối</option>
+                                        <option value="10">Khối 10</option>
+                                        <option value="11">Khối 11</option>
+                                        <option value="12">Khối 12</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Năm học</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-calendar-alt text-gray-400"></i>
+                                    </div>
+                                    <select name="academicYear" class="form-input pl-10">
+                                        <option value="">Chọn năm học</option>
+                                        <option value="2023-2024">2023-2024</option>
+                                        <option value="2022-2023">2022-2023</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Học lực</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-star text-gray-400"></i>
+                                    </div>
+                                    <select name="academicPerformance" class="form-input pl-10">
+                                        <option value="">Chọn học lực</option>
+                                        <option value="excellent">Xuất sắc</option>
+                                        <option value="good">Giỏi</option>
+                                        <option value="average">Khá</option>
+                                        <option value="below">Trung bình</option>
+                                        <option value="weak">Yếu</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information Section -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                            <i class="fas fa-address-card mr-2 text-blue-600"></i>
+                            Thông tin liên hệ
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="md:col-span-2">
+                                <label class="form-label required">Địa chỉ</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-map-marker-alt text-gray-400"></i>
+                                    </div>
+                                    <input type="text" name="address" class="form-input pl-10" placeholder="Nhập địa chỉ" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Tỉnh/Thành phố</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-city text-gray-400"></i>
+                                    </div>
+                                    <select name="city" class="form-input pl-10">
+                                        <option value="">Chọn tỉnh/thành phố</option>
+                                        <option value="hanoi">Hà Nội</option>
+                                        <option value="hcm">Hồ Chí Minh</option>
+                                        <option value="danang">Đà Nẵng</option>
+                                        <option value="haiphong">Hải Phòng</option>
+                                        <option value="cantho">Cần Thơ</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Quận/Huyện</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-map text-gray-400"></i>
+                                    </div>
+                                    <select name="district" class="form-input pl-10">
+                                        <option value="">Chọn quận/huyện</option>
+                                        <option value="cau-giay">Cầu Giấy</option>
+                                        <option value="dong-da">Đống Đa</option>
+                                        <option value="hai-ba-trung">Hai Bà Trưng</option>
+                                        <option value="hoan-kiem">Hoàn Kiếm</option>
+                                        <option value="thanh-xuan">Thanh Xuân</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Guardian Information Section -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                            <i class="fas fa-users mr-2 text-blue-600"></i>
+                            Thông tin phụ huynh
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="form-label">Họ và tên phụ huynh</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-user-friends text-gray-400"></i>
+                                    </div>
+                                    <input type="text" name="guardianName" class="form-input pl-10" placeholder="Nhập họ và tên phụ huynh">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Số điện thoại phụ huynh</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-phone-alt text-gray-400"></i>
+                                    </div>
+                                    <input type="tel" name="guardianPhone" class="form-input pl-10" placeholder="0987654321">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Email phụ huynh</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-envelope text-gray-400"></i>
+                                    </div>
+                                    <input type="email" name="guardianEmail" class="form-input pl-10" placeholder="email@example.com">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Mối quan hệ</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-heart text-gray-400"></i>
+                                    </div>
+                                    <select name="guardianRelation" class="form-input pl-10">
+                                        <option value="">Chọn mối quan hệ</option>
+                                        <option value="father">Cha</option>
+                                        <option value="mother">Mẹ</option>
+                                        <option value="grandfather">Ông</option>
+                                        <option value="grandmother">Bà</option>
+                                        <option value="other">Khác</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information Section -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                            <i class="fas fa-info-circle mr-2 text-blue-600"></i>
+                            Thông tin bổ sung
+                        </h3>
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <label class="form-label">Ghi chú</label>
+                                <textarea name="notes" class="form-input" rows="3" placeholder="Nhập ghi chú về học sinh (nếu có)"></textarea>
+                            </div>
+                            <div>
+                                <label class="form-label">Sở thích</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="hobbies" value="reading" class="form-checkbox">
+                                        <span class="ml-2">Đọc sách</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="hobbies" value="sports" class="form-checkbox">
+                                        <span class="ml-2">Thể thao</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="hobbies" value="music" class="form-checkbox">
+                                        <span class="ml-2">Âm nhạc</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="hobbies" value="art" class="form-checkbox">
+                                        <span class="ml-2">Nghệ thuật</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="hobbies" value="technology" class="form-checkbox">
+                                        <span class="ml-2">Công nghệ</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="hobbies" value="other" class="form-checkbox">
+                                        <span class="ml-2">Khác</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex justify-end space-x-4">
+                        <button type="button" onclick="closeModal('addStudentModal')" class="btn-secondary">
+                            <i class="fas fa-times mr-2"></i>Hủy
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save mr-2"></i>Lưu học sinh
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Page Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Quản lý Học sinh</h1>
+                <p class="text-gray-600">Quản lý thông tin và theo dõi học sinh</p>
+            </div>
+            <button onclick="openModal('addStudentModal')" class="btn-primary flex items-center">
+                <i class="fas fa-user-plus mr-2"></i>
+                <span>Thêm học sinh</span>
+            </button>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tổng số học sinh</p>
+                        <h3 class="text-2xl font-bold text-blue-600">1,250</h3>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-users text-blue-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>5%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Học sinh giỏi</p>
+                        <h3 class="text-2xl font-bold text-green-600">486</h3>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-award text-green-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>8%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Học sinh cần cải thiện</p>
+                        <h3 class="text-2xl font-bold text-yellow-600">125</h3>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-exclamation-circle text-yellow-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-red-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>2%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tỷ lệ chuyên cần</p>
+                        <h3 class="text-2xl font-bold text-purple-600">95%</h3>
+                    </div>
+                    <div class="bg-purple-100 p-3 rounded-full">
+                        <i class="fas fa-chart-line text-purple-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>3%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                    <input type="text" placeholder="Tìm kiếm học sinh..." class="form-input pl-10">
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-graduation-cap text-gray-400"></i>
+                    </div>
+                    <select class="form-input pl-10">
+                        <option value="">Tất cả lớp</option>
+                        <option value="10A1">10A1</option>
+                        <option value="10A2">10A2</option>
+                        <option value="11A1">11A1</option>
+                        <option value="11A2">11A2</option>
+                    </select>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-filter text-gray-400"></i>
+                    </div>
+                    <select class="form-input pl-10">
+                        <option value="">Trạng thái</option>
+                        <option value="active">Đang học</option>
+                        <option value="inactive">Nghỉ học</option>
+                        <option value="graduated">Đã tốt nghiệp</option>
+                    </select>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-sort text-gray-400"></i>
+                    </div>
+                    <select class="form-input pl-10">
+                        <option value="">Sắp xếp theo</option>
+                        <option value="name">Tên</option>
+                        <option value="class">Lớp</option>
+                        <option value="id">Mã học sinh</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Table -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Mã học sinh
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Họ và tên
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Lớp
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Giới tính
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Ngày sinh
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Địa chỉ
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Liên hệ
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Trạng thái
+                            </th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Thao tác
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">HS001</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="h-10 w-10 flex-shrink-0">
+                                        <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Nguyen+Van+An&background=6366f1&color=fff" alt="">
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">Nguyễn Văn An</div>
+                                        <div class="text-sm text-gray-500">an.nguyen@example.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    10A1
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Nam</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15/05/2008</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Hà Nội</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0987654321</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Đang học
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button onclick="openModal('viewStudentModal')" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="openModal('editStudentModal')" class="text-blue-600 hover:text-blue-900 mr-3">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deleteStudent('HS001')" class="text-red-600 hover:text-red-900">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">HS002</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="h-10 w-10 flex-shrink-0">
+                                        <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Tran+Thi+Binh&background=10b981&color=fff" alt="">
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">Trần Thị Bình</div>
+                                        <div class="text-sm text-gray-500">binh.tran@example.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    10A2
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Nữ</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20/06/2008</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Hải Phòng</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0987654322</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Đang học
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button onclick="openModal('viewStudentModal')" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="openModal('editStudentModal')" class="text-blue-600 hover:text-blue-900 mr-3">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deleteStudent('HS002')" class="text-red-600 hover:text-red-900">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">HS003</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="h-10 w-10 flex-shrink-0">
+                                        <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Le+Van+Cuong&background=f59e0b&color=fff" alt="">
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">Lê Văn Cường</div>
+                                        <div class="text-sm text-gray-500">cuong.le@example.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    11A1
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Nam</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10/03/2007</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Đà Nẵng</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0987654323</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                    Nghỉ học
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button onclick="openModal('viewStudentModal')" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="openModal('editStudentModal')" class="text-blue-600 hover:text-blue-900 mr-3">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deleteStudent('HS003')" class="text-red-600 hover:text-red-900">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">HS004</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="h-10 w-10 flex-shrink-0">
+                                        <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Pham+Thi+Dung&background=8b5cf6&color=fff" alt="">
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">Phạm Thị Dung</div>
+                                        <div class="text-sm text-gray-500">dung.pham@example.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    11A2
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Nữ</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">25/08/2007</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Hồ Chí Minh</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0987654324</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Đang học
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button onclick="openModal('viewStudentModal')" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="openModal('editStudentModal')" class="text-blue-600 hover:text-blue-900 mr-3">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deleteStudent('HS004')" class="text-red-600 hover:text-red-900">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">HS005</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="h-10 w-10 flex-shrink-0">
+                                        <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Hoang+Van+Em&background=ef4444&color=fff" alt="">
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">Hoàng Văn Em</div>
+                                        <div class="text-sm text-gray-500">em.hoang@example.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    10A1
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Nam</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">30/11/2008</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Cần Thơ</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0987654325</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                    Đã tốt nghiệp
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button onclick="openModal('viewStudentModal')" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="openModal('editStudentModal')" class="text-blue-600 hover:text-blue-900 mr-3">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deleteStudent('HS005')" class="text-red-600 hover:text-red-900">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center justify-between mt-6">
+            <div class="flex items-center">
+                <span class="text-sm text-gray-700">
+                    Hiển thị
+                    <span class="font-medium">1</span>
+                    đến
+                    <span class="font-medium">5</span>
+                    trong số
+                    <span class="font-medium">1,250</span>
+                    học sinh
+                </span>
+            </div>
+            <div class="flex justify-center space-x-1">
+                <button class="btn-secondary px-3 py-1 rounded-lg">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="btn-primary px-3 py-1 rounded-lg">1</button>
+                <button class="btn-secondary px-3 py-1 rounded-lg">2</button>
+                <button class="btn-secondary px-3 py-1 rounded-lg">3</button>
+                <button class="btn-secondary px-3 py-1 rounded-lg">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Student Modal -->
+    <div id="editStudentModal" class="modal hidden">
+        <!-- Similar structure to Add Student Modal -->
+    </div>
+
+    <!-- View Student Modal -->
+    <div id="viewStudentModal" class="modal hidden">
+        <div class="modal-content max-w-4xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Thông tin học sinh</h2>
+                <button class="modal-close text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Student Info -->
+                <div class="md:col-span-2 space-y-6">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold mb-4">Thông tin cá nhân</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Mã học sinh</p>
+                                <p class="font-medium">HS001</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Họ và tên</p>
+                                <p class="font-medium">Nguyễn Văn An</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Ngày sinh</p>
+                                <p class="font-medium">15/05/2008</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Giới tính</p>
+                                <p class="font-medium">Nam</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Email</p>
+                                <p class="font-medium">an.nguyen@example.com</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Số điện thoại</p>
+                                <p class="font-medium">0987654321</p>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-sm text-gray-500">Địa chỉ</p>
+                                <p class="font-medium">Hà Nội</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold mb-4">Thông tin học tập</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Lớp</p>
+                                <p class="font-medium">10A1</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Điểm trung bình</p>
+                                <p class="font-medium">8.5</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Hạnh kiểm</p>
+                                <p class="font-medium">Tốt</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Chuyên cần</p>
+                                <p class="font-medium">95%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Student Stats -->
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Mã học sinh</th>
+                                        <th>Họ và tên</th>
+                                        <th>Lớp</th>
+                                        <th>Ngày sinh</th>
+                                        <th>Giới tính</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>HS001</td>
+                                        <td>Nguyễn Văn An</td>
+                                        <td>10A1</td>
+                                        <td>Nam</td>
+                                        <td>15/05/2008</td>
+                                        <td>Hà Nội</td>
+                                        <td>0987654321</td>
+                                        <td>
+                                            <button onclick="editStudent('HS001')" class="text-blue-600 hover:text-blue-800">Sửa</button>
+                                            <button onclick="deleteStudent('HS001')" class="text-red-600 hover:text-red-800 ml-2">Xóa</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>HS002</td>
+                                        <td>Trần Thị Bình</td>
+                                        <td>10A2</td>
+                                        <td>Nữ</td>
+                                        <td>22/03/2008</td>
+                                        <td>Hải Phòng</td>
+                                        <td>0987654322</td>
+                                        <td>
+                                            <button onclick="editStudent('HS002')" class="text-blue-600 hover:text-blue-800">Sửa</button>
+                                            <button onclick="deleteStudent('HS002')" class="text-red-600 hover:text-red-800 ml-2">Xóa</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>HS003</td>
+                                        <td>Lê Văn Cường</td>
+                                        <td>10A1</td>
+                                        <td>Nam</td>
+                                        <td>10/11/2008</td>
+                                        <td>Nam Định</td>
+                                        <td>0987654323</td>
+                                        <td>
+                                            <button onclick="editStudent('HS003')" class="text-blue-600 hover:text-blue-800">Sửa</button>
+                                            <button onclick="deleteStudent('HS003')" class="text-red-600 hover:text-red-800 ml-2">Xóa</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>HS004</td>
+                                        <td>Phạm Thị Dung</td>
+                                        <td>10A3</td>
+                                        <td>Nữ</td>
+                                        <td>05/07/2008</td>
+                                        <td>Hà Nội</td>
+                                        <td>0987654324</td>
+                                        <td>
+                                            <button onclick="editStudent('HS004')" class="text-blue-600 hover:text-blue-800">Sửa</button>
+                                            <button onclick="deleteStudent('HS004')" class="text-red-600 hover:text-red-800 ml-2">Xóa</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>HS005</td>
+                                        <td>Hoàng Văn Em</td>
+                                        <td>10A2</td>
+                                        <td>Nam</td>
+                                        <td>18/09/2008</td>
+                                        <td>Bắc Ninh</td>
+                                        <td>0987654325</td>
+                                        <td>
+                                            <button onclick="editStudent('HS005')" class="text-blue-600 hover:text-blue-800">Sửa</button>
+                                            <button onclick="deleteStudent('HS005')" class="text-red-600 hover:text-red-800 ml-2">Xóa</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>HS006</td>
+                                        <td>Đỗ Thị Phương</td>
+                                        <td>10A1</td>
+                                        <td>Nữ</td>
+                                        <td>30/01/2008</td>
+                                        <td>Hà Nội</td>
+                                        <td>0987654326</td>
+                                        <td>
+                                            <button onclick="editStudent('HS006')" class="text-blue-600 hover:text-blue-800">Sửa</button>
+                                            <button onclick="deleteStudent('HS006')" class="text-red-600 hover:text-red-800 ml-2">Xóa</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>HS007</td>
+                                        <td>Vũ Văn Giang</td>
+                                        <td>10A3</td>
+                                        <td>Nam</td>
+                                        <td>12/04/2008</td>
+                                        <td>Hải Dương</td>
+                                        <td>0987654327</td>
+                                        <td>
+                                            <button onclick="editStudent('HS007')" class="text-blue-600 hover:text-blue-800">Sửa</button>
+                                            <button onclick="deleteStudent('HS007')" class="text-red-600 hover:text-red-800 ml-2">Xóa</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>HS008</td>
+                                        <td>Ngô Thị Hương</td>
+                                        <td>10A2</td>
+                                        <td>Nữ</td>
+                                        <td>25/08/2008</td>
+                                        <td>Hà Nội</td>
+                                        <td>0987654328</td>
+                                        <td>
+                                            <button onclick="editStudent('HS008')" class="text-blue-600 hover:text-blue-800">Sửa</button>
+                                            <button onclick="deleteStudent('HS008')" class="text-red-600 hover:text-red-800 ml-2">Xóa</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>HS009</td>
+                                        <td>Trịnh Văn Hùng</td>
+                                        <td>10A1</td>
+                                        <td>Nam</td>
+                                        <td>03/12/2008</td>
+                                        <td>Hưng Yên</td>
+                                        <td>0987654329</td>
+                                        <td>
+                                            <button onclick="editStudent('HS009')" class="text-blue-600 hover:text-blue-800">Sửa</button>
+                                            <button onclick="deleteStudent('HS009')" class="text-red-600 hover:text-red-800 ml-2">Xóa</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>HS010</td>
+                                        <td>Bùi Thị Lan</td>
+                                        <td>10A3</td>
+                                        <td>Nữ</td>
+                                        <td>20/06/2008</td>
+                                        <td>Hà Nội</td>
+                                        <td>0987654330</td>
+                                        <td>
+                                            <button onclick="editStudent('HS010')" class="text-blue-600 hover:text-blue-800">Sửa</button>
+                                            <button onclick="deleteStudent('HS010')" class="text-red-600 hover:text-red-800 ml-2">Xóa</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="flex justify-center mt-6">
+                        <nav class="flex items-center space-x-2">
+                            <button class="btn-secondary px-3 py-1">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="btn-primary px-3 py-1">1</button>
+                            <button class="btn-secondary px-3 py-1">2</button>
+                            <button class="btn-secondary px-3 py-1">3</button>
+                            <button class="btn-secondary px-3 py-1">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html> 

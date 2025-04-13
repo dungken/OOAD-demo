@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSMS - Hệ thống Quản lý Trường học</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
+        }
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .hero-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        @keyframes blob {
+            0% {
+                transform: translate(0px, 0px) scale(1);
+            }
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 text-white shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold flex items-center group">
+                        <div class="bg-white p-3 rounded-xl mr-3 transform group-hover:rotate-12 transition duration-300">
+                            <i class="fas fa-graduation-cap text-blue-600 text-2xl"></i>
+                        </div>
+                        <span class="text-white">SSMS</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="nav-link font-medium">Trang chủ</a>
+                    <a href="students.html" class="nav-link">Quản lý học sinh</a>
+                    <a href="classes.html" class="nav-link">Lớp học</a>
+                    <a href="grades.html" class="nav-link">Điểm số</a>
+                    <a href="discipline.html" class="nav-link">Kỷ luật</a>
+                    <a href="finance.html" class="nav-link">Tài chính</a>
+                    <a href="activities.html" class="nav-link">Hoạt động</a>
+                    <a href="reports.html" class="nav-link">Báo cáo</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition duration-300 flex items-center group">
+                        <i class="fas fa-user mr-2 group-hover:rotate-12 transition duration-300"></i>
+                        Đăng nhập
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-white py-10">
+        <div class="container mx-auto px-6 relative">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                <!-- Left Content -->
+                <div class="md:w-6/12 md:pr-8">
+                    <div class="inline-block">
+                        <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-blue-600 text-white mb-6">
+                            <span class="flex h-2 w-2 mr-2">
+                                <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-blue-300"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-400"></span>
+                            </span>
+                            Phiên bản 2.0 đã ra mắt
+                        </span>
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                        Hệ thống Quản lý 
+                        <span class="text-blue-200">Trường học</span>
+                        <br>
+                        <span class="text-blue-200">Thông minh</span>
+                    </h1>
+                    <p class="text-lg mb-8 text-white leading-relaxed">
+                        Giải pháp toàn diện cho việc quản lý trường học, nâng cao hiệu quả và chất lượng giáo dục.
+                    </p>
+                    <div class="flex flex-wrap gap-4 mb-8">
+                        <a href="students.html" class="group relative px-6 py-3 bg-white text-blue-600 rounded-xl font-medium hover:bg-blue-50 transition-all duration-300 flex items-center">
+                            <i class="fas fa-user-graduate mr-2 group-hover:rotate-12 transition-transform duration-300"></i>
+                            Quản lý học sinh
+                        </a>
+                        <a href="classes.html" class="group relative px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-all duration-300 flex items-center">
+                            <i class="fas fa-chalkboard mr-2 group-hover:rotate-12 transition-transform duration-300"></i>
+                            Quản lý lớp học
+                        </a>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex -space-x-2">
+                            <img class="w-8 h-8 rounded-full ring-2 ring-white" src="https://i.pravatar.cc/100?img=1" alt="User">
+                            <img class="w-8 h-8 rounded-full ring-2 ring-white" src="https://i.pravatar.cc/100?img=2" alt="User">
+                            <img class="w-8 h-8 rounded-full ring-2 ring-white" src="https://i.pravatar.cc/100?img=3" alt="User">
+                        </div>
+                        <p class="text-white text-sm">Được tin dùng bởi hơn 100+ trường học</p>
+                    </div>
+                </div>
+
+                <!-- Right Content -->
+                <div class="md:w-5/12">
+                    <div class="relative">
+                        <div class="bg-blue-800 rounded-2xl p-8 transition-transform duration-300 hover:scale-[1.02]">
+                            <img src="https://img.freepik.com/free-vector/teaching-concept-illustration_114360-1708.jpg" 
+                                 alt="School Management System" 
+                                 class="rounded-xl w-full h-auto">
+                            <div class="absolute bottom-0 left-0 right-0 p-6 bg-blue-900 rounded-b-2xl">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                        <span class="text-sm text-white">Hệ thống đang hoạt động</span>
+                                    </div>
+                                    <div class="text-sm text-white">
+                                        <i class="fas fa-users mr-1"></i>
+                                        1,234 người dùng
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Welcome Section -->
+        <div class="bg-white rounded-xl shadow-md p-8 mb-12 animate__animated animate__fadeIn">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Chào mừng đến với SSMS</h2>
+                    <p class="text-gray-600">Hệ thống Quản lý Trường học Thông minh</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <div class="flex items-center bg-blue-50 p-4 rounded-lg">
+                        <div class="text-right mr-4">
+                            <p class="text-sm text-gray-500">Hôm nay</p>
+                            <p class="text-lg font-semibold text-gray-800">Thứ 2, 13/03/2024</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <i class="fas fa-calendar-day text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tổng số học sinh</p>
+                        <h3 class="text-2xl font-bold text-blue-600">1,250</h3>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-user-graduate text-blue-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-blue-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>5%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với năm trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tổng số lớp học</p>
+                        <h3 class="text-2xl font-bold text-green-600">45</h3>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-chalkboard text-green-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>3%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với năm trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tổng số giáo viên</p>
+                        <h3 class="text-2xl font-bold text-yellow-600">85</h3>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-chalkboard-teacher text-yellow-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-yellow-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>7%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với năm trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tỷ lệ tốt nghiệp</p>
+                        <h3 class="text-2xl font-bold text-purple-600">98.5%</h3>
+                    </div>
+                    <div class="bg-purple-100 p-3 rounded-full">
+                        <i class="fas fa-graduation-cap text-purple-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-purple-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>1.2%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với năm trước</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column -->
+            <div class="lg:col-span-2">
+                <!-- Academic Performance -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8 card-hover">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Hiệu suất học tập</h2>
+                        <div class="flex space-x-2">
+                            <button class="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg text-sm hover:bg-gray-200 transition">Tuần</button>
+                            <button class="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition">Tháng</button>
+                            <button class="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg text-sm hover:bg-gray-200 transition">Năm</button>
+                        </div>
+                    </div>
+                    <div class="h-64">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6">Hoạt động gần đây</h2>
+                    <div class="space-y-6">
+                        <div class="flex items-start p-4 bg-blue-50 rounded-lg">
+                            <div class="bg-blue-600 p-2 rounded-full mr-4">
+                                <i class="fas fa-user-plus text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">Thêm học sinh mới</p>
+                                <p class="text-sm text-gray-500">Nguyễn Văn A đã được thêm vào lớp 10A1</p>
+                                <p class="text-xs text-gray-400 mt-1">2 giờ trước</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start p-4 bg-green-50 rounded-lg">
+                            <div class="bg-green-600 p-2 rounded-full mr-4">
+                                <i class="fas fa-star text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">Cập nhật điểm số</p>
+                                <p class="text-sm text-gray-500">Điểm kiểm tra giữa kỳ môn Toán lớp 11A2 đã được cập nhật</p>
+                                <p class="text-xs text-gray-400 mt-1">5 giờ trước</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start p-4 bg-yellow-50 rounded-lg">
+                            <div class="bg-yellow-600 p-2 rounded-full mr-4">
+                                <i class="fas fa-exclamation-triangle text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">Vi phạm kỷ luật</p>
+                                <p class="text-sm text-gray-500">Trần Thị B đã bị ghi nhận vi phạm nội quy trường học</p>
+                                <p class="text-xs text-gray-400 mt-1">1 ngày trước</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start p-4 bg-purple-50 rounded-lg">
+                            <div class="bg-purple-600 p-2 rounded-full mr-4">
+                                <i class="fas fa-calendar-check text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">Hoạt động ngoại khóa</p>
+                                <p class="text-sm text-gray-500">Hội thi Olympic Toán học đã được lên kế hoạch</p>
+                                <p class="text-xs text-gray-400 mt-1">2 ngày trước</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div>
+                <!-- Upcoming Events -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8 card-hover">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6">Sự kiện sắp tới</h2>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-blue-500 pl-4 p-3 bg-blue-50 rounded-r-lg">
+                            <p class="font-medium text-gray-800">Hội thi Olympic Toán học</p>
+                            <p class="text-sm text-gray-500">15/03/2024 - 20/03/2024</p>
+                            <p class="text-xs text-blue-500 mt-1">Hội trường A</p>
+                        </div>
+                        <div class="border-l-4 border-green-500 pl-4 p-3 bg-green-50 rounded-r-lg">
+                            <p class="font-medium text-gray-800">Hội diễn văn nghệ</p>
+                            <p class="text-sm text-gray-500">25/03/2024 - 27/03/2024</p>
+                            <p class="text-xs text-green-500 mt-1">Sân khấu chính</p>
+                        </div>
+                        <div class="border-l-4 border-yellow-500 pl-4 p-3 bg-yellow-50 rounded-r-lg">
+                            <p class="font-medium text-gray-800">Giải bóng đá học sinh</p>
+                            <p class="text-sm text-gray-500">01/04/2024 - 10/04/2024</p>
+                            <p class="text-xs text-yellow-500 mt-1">Sân bóng trường</p>
+                        </div>
+                        <div class="border-l-4 border-purple-500 pl-4 p-3 bg-purple-50 rounded-r-lg">
+                            <p class="font-medium text-gray-800">Hội thảo hướng nghiệp</p>
+                            <p class="text-sm text-gray-500">15/04/2024</p>
+                            <p class="text-xs text-purple-500 mt-1">Hội trường B</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6">Truy cập nhanh</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <a href="students.html" class="flex flex-col items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+                            <i class="fas fa-user-graduate text-blue-600 text-2xl mb-2"></i>
+                            <span class="text-blue-600 font-medium">Học sinh</span>
+                        </a>
+                        <a href="classes.html" class="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition">
+                            <i class="fas fa-chalkboard text-green-600 text-2xl mb-2"></i>
+                            <span class="text-green-600 font-medium">Lớp học</span>
+                        </a>
+                        <a href="grades.html" class="flex flex-col items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition">
+                            <i class="fas fa-star text-yellow-600 text-2xl mb-2"></i>
+                            <span class="text-yellow-600 font-medium">Điểm số</span>
+                        </a>
+                        <a href="activities.html" class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition">
+                            <i class="fas fa-calendar-check text-purple-600 text-2xl mb-2"></i>
+                            <span class="text-purple-600 font-medium">Hoạt động</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-gray-900 to-gray-800 text-white mt-12">
+        <div class="container mx-auto px-6 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-blue-600 p-2 rounded-lg mr-3">
+                            <i class="fas fa-graduation-cap text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">SSMS</h3>
+                    </div>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Hệ thống Quản lý Trường học Thông minh - Giải pháp toàn diện cho việc quản lý trường học. 
+                        Chúng tôi cung cấp các công cụ hiện đại để nâng cao hiệu quả quản lý và chất lượng giáo dục.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="bg-blue-600 hover:bg-blue-700 p-2 rounded-full transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="bg-blue-400 hover:bg-blue-500 p-2 rounded-full transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="bg-pink-600 hover:bg-pink-700 p-2 rounded-full transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="bg-blue-700 hover:bg-blue-800 p-2 rounded-full transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-6 relative">
+                        Liên kết nhanh
+                        <div class="absolute bottom-0 left-0 w-12 h-1 bg-blue-500 rounded"></div>
+                    </h3>
+                    <ul class="space-y-3">
+                        <li>
+                            <a href="students.html" class="text-gray-400 hover:text-white flex items-center transition">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-blue-500"></i>
+                                Quản lý học sinh
+                            </a>
+                        </li>
+                        <li>
+                            <a href="classes.html" class="text-gray-400 hover:text-white flex items-center transition">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-blue-500"></i>
+                                Lớp học
+                            </a>
+                        </li>
+                        <li>
+                            <a href="grades.html" class="text-gray-400 hover:text-white flex items-center transition">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-blue-500"></i>
+                                Điểm số
+                            </a>
+                        </li>
+                        <li>
+                            <a href="activities.html" class="text-gray-400 hover:text-white flex items-center transition">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-blue-500"></i>
+                                Hoạt động
+                            </a>
+                        </li>
+                        <li>
+                            <a href="reports.html" class="text-gray-400 hover:text-white flex items-center transition">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-blue-500"></i>
+                                Báo cáo
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-6 relative">
+                        Liên hệ
+                        <div class="absolute bottom-0 left-0 w-12 h-1 bg-blue-500 rounded"></div>
+                    </h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div class="bg-blue-600 p-2 rounded-lg mr-3 mt-1">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium">Địa chỉ</p>
+                                <p class="text-gray-400">123 Đường ABC, Quận XYZ, TP.HCM</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="bg-blue-600 p-2 rounded-lg mr-3 mt-1">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium">Điện thoại</p>
+                                <p class="text-gray-400">(84) 123-456-789</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="bg-blue-600 p-2 rounded-lg mr-3 mt-1">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium">Email</p>
+                                <p class="text-gray-400">info@ssms.edu.vn</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-12 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm">&copy; 2024 SSMS. Tất cả quyền được bảo lưu.</p>
+                    <div class="flex space-x-6 mt-4 md:mt-0">
+                        <a href="#" class="text-gray-400 hover:text-white text-sm transition">Điều khoản sử dụng</a>
+                        <a href="#" class="text-gray-400 hover:text-white text-sm transition">Chính sách bảo mật</a>
+                        <a href="#" class="text-gray-400 hover:text-white text-sm transition">Hỗ trợ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Initialize charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Performance Chart
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+                    datasets: [
+                        {
+                            label: 'Điểm trung bình',
+                            data: [7.2, 7.5, 7.8, 7.6, 7.9, 8.1, 8.3, 8.5, 8.2, 8.4, 8.6, 8.8],
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Tỷ lệ đạt',
+                            data: [85, 87, 88, 86, 89, 90, 92, 93, 91, 92, 94, 95],
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 6,
+                            max: 10,
+                            title: {
+                                display: true,
+                                text: 'Điểm trung bình'
+                            }
+                        },
+                        y1: {
+                            position: 'right',
+                            beginAtZero: false,
+                            min: 80,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Tỷ lệ đạt (%)'
+                            },
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

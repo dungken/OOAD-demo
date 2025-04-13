@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Hoạt động - SSMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 text-white shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold flex items-center group">
+                        <div class="bg-white p-3 rounded-xl mr-3 transform group-hover:rotate-12 transition duration-300">
+                            <i class="fas fa-graduation-cap text-blue-600 text-2xl"></i>
+                        </div>
+                        <span class="text-white">SSMS</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="nav-link">Trang chủ</a>
+                    <a href="students.html" class="nav-link">Quản lý học sinh</a>
+                    <a href="classes.html" class="nav-link">Lớp học</a>
+                    <a href="grades.html" class="nav-link">Điểm số</a>
+                    <a href="discipline.html" class="nav-link">Kỷ luật</a>
+                    <a href="finance.html" class="nav-link">Tài chính</a>
+                    <a href="activities.html" class="nav-link font-medium">Hoạt động</a>
+                    <a href="reports.html" class="nav-link">Báo cáo</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition duration-300 flex items-center group">
+                        <i class="fas fa-user mr-2 group-hover:rotate-12 transition duration-300"></i>
+                        Đăng nhập
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Page Header -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Quản lý Hoạt động</h1>
+            <div class="flex space-x-4">
+                <button onclick="openModal('addActivityModal')" class="btn-primary">
+                    <i class="fas fa-plus mr-2"></i>Thêm hoạt động
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tổng hoạt động</p>
+                        <h3 class="text-2xl font-bold text-blue-600">24</h3>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-calendar-check text-blue-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-blue-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>20%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Đang diễn ra</p>
+                        <h3 class="text-2xl font-bold text-green-600">5</h3>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-play text-green-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>25%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Sắp diễn ra</p>
+                        <h3 class="text-2xl font-bold text-yellow-600">8</h3>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-clock text-yellow-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-yellow-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>15%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Đã kết thúc</p>
+                        <h3 class="text-2xl font-bold text-gray-600">11</h3>
+                    </div>
+                    <div class="bg-gray-100 p-3 rounded-full">
+                        <i class="fas fa-check text-gray-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-gray-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>10%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <select class="form-input">
+                        <option value="">Loại hoạt động</option>
+                        <option value="ACADEMIC">Học thuật</option>
+                        <option value="CULTURAL">Văn hóa</option>
+                        <option value="SPORTS">Thể thao</option>
+                        <option value="COMMUNITY">Cộng đồng</option>
+                    </select>
+                </div>
+                <div>
+                    <select class="form-input">
+                        <option value="">Trạng thái</option>
+                        <option value="UPCOMING">Sắp diễn ra</option>
+                        <option value="ONGOING">Đang diễn ra</option>
+                        <option value="COMPLETED">Đã kết thúc</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="month" class="form-input" value="2024-03">
+                </div>
+                <div>
+                    <input type="text" placeholder="Tìm kiếm..." class="form-input">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs for different views -->
+        <div class="bg-white rounded-lg shadow-md mb-6">
+            <div class="border-b border-gray-200">
+                <nav class="flex -mb-px">
+                    <button class="tab-button active py-4 px-6 text-blue-600 border-b-2 border-blue-600 font-medium">
+                        Danh sách
+                    </button>
+                    <button class="tab-button py-4 px-6 text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium">
+                        Lịch
+                    </button>
+                    <button class="tab-button py-4 px-6 text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium">
+                        Thống kê
+                    </button>
+                </nav>
+            </div>
+            <div class="p-4">
+                <!-- Tab Content: List -->
+                <div id="listTab" class="tab-content active">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Activity Card 1 -->
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            <div class="p-4">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-800">Hội thi Olympic Toán học</h3>
+                                        <p class="text-sm text-gray-500">15/03/2024 - 20/03/2024</p>
+                                    </div>
+                                    <span class="badge badge-success">Đang diễn ra</span>
+                                </div>
+                                <div class="mb-4">
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+                                        Hội trường A
+                                    </p>
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="fas fa-users mr-2 text-blue-500"></i>
+                                        150 học sinh
+                                    </p>
+                                    <p class="text-gray-600">
+                                        <i class="fas fa-user-tie mr-2 text-blue-500"></i>
+                                        GV. Nguyễn Văn A
+                                    </p>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="badge badge-primary">Học thuật</span>
+                                    <div class="flex space-x-2">
+                                        <button onclick="openModal('editActivityModal')" class="text-blue-600 hover:text-blue-800">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteActivity('ACT001')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity Card 2 -->
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            <div class="p-4">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-800">Hội diễn văn nghệ</h3>
+                                        <p class="text-sm text-gray-500">25/03/2024 - 27/03/2024</p>
+                                    </div>
+                                    <span class="badge badge-warning">Sắp diễn ra</span>
+                                </div>
+                                <div class="mb-4">
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+                                        Sân khấu chính
+                                    </p>
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="fas fa-users mr-2 text-blue-500"></i>
+                                        200 học sinh
+                                    </p>
+                                    <p class="text-gray-600">
+                                        <i class="fas fa-user-tie mr-2 text-blue-500"></i>
+                                        GV. Trần Thị B
+                                    </p>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="badge badge-info">Văn hóa</span>
+                                    <div class="flex space-x-2">
+                                        <button onclick="openModal('editActivityModal')" class="text-blue-600 hover:text-blue-800">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteActivity('ACT002')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity Card 3 -->
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            <div class="p-4">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-800">Giải bóng đá học sinh</h3>
+                                        <p class="text-sm text-gray-500">01/04/2024 - 10/04/2024</p>
+                                    </div>
+                                    <span class="badge badge-warning">Sắp diễn ra</span>
+                                </div>
+                                <div class="mb-4">
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+                                        Sân bóng trường
+                                    </p>
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="fas fa-users mr-2 text-blue-500"></i>
+                                        100 học sinh
+                                    </p>
+                                    <p class="text-gray-600">
+                                        <i class="fas fa-user-tie mr-2 text-blue-500"></i>
+                                        GV. Lê Văn C
+                                    </p>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="badge badge-success">Thể thao</span>
+                                    <div class="flex space-x-2">
+                                        <button onclick="openModal('editActivityModal')" class="text-blue-600 hover:text-blue-800">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteActivity('ACT003')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity Card 4 -->
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            <div class="p-4">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-800">Tình nguyện mùa hè xanh</h3>
+                                        <p class="text-sm text-gray-500">15/06/2024 - 30/06/2024</p>
+                                    </div>
+                                    <span class="badge badge-warning">Sắp diễn ra</span>
+                                </div>
+                                <div class="mb-4">
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+                                        Xã A, Huyện B
+                                    </p>
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="fas fa-users mr-2 text-blue-500"></i>
+                                        50 học sinh
+                                    </p>
+                                    <p class="text-gray-600">
+                                        <i class="fas fa-user-tie mr-2 text-blue-500"></i>
+                                        GV. Phạm Thị D
+                                    </p>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="badge badge-secondary">Cộng đồng</span>
+                                    <div class="flex space-x-2">
+                                        <button onclick="openModal('editActivityModal')" class="text-blue-600 hover:text-blue-800">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteActivity('ACT004')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity Card 5 -->
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            <div class="p-4">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-800">Hội thảo hướng nghiệp</h3>
+                                        <p class="text-sm text-gray-500">10/03/2024 - 12/03/2024</p>
+                                    </div>
+                                    <span class="badge badge-danger">Đã kết thúc</span>
+                                </div>
+                                <div class="mb-4">
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+                                        Hội trường B
+                                    </p>
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="fas fa-users mr-2 text-blue-500"></i>
+                                        300 học sinh
+                                    </p>
+                                    <p class="text-gray-600">
+                                        <i class="fas fa-user-tie mr-2 text-blue-500"></i>
+                                        GV. Hoàng Văn E
+                                    </p>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="badge badge-primary">Học thuật</span>
+                                    <div class="flex space-x-2">
+                                        <button onclick="openModal('editActivityModal')" class="text-blue-600 hover:text-blue-800">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteActivity('ACT005')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity Card 6 -->
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            <div class="p-4">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-800">Giải cầu lông</h3>
+                                        <p class="text-sm text-gray-500">05/03/2024 - 08/03/2024</p>
+                                    </div>
+                                    <span class="badge badge-danger">Đã kết thúc</span>
+                                </div>
+                                <div class="mb-4">
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+                                        Nhà thi đấu
+                                    </p>
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="fas fa-users mr-2 text-blue-500"></i>
+                                        80 học sinh
+                                    </p>
+                                    <p class="text-gray-600">
+                                        <i class="fas fa-user-tie mr-2 text-blue-500"></i>
+                                        GV. Đỗ Văn F
+                                    </p>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="badge badge-success">Thể thao</span>
+                                    <div class="flex space-x-2">
+                                        <button onclick="openModal('editActivityModal')" class="text-blue-600 hover:text-blue-800">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteActivity('ACT006')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Calendar -->
+                <div id="calendarTab" class="tab-content hidden">
+                    <div class="bg-white p-4 rounded-lg shadow-md">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold">Lịch hoạt động</h3>
+                            <div class="flex space-x-2">
+                                <button class="btn-secondary">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <span class="font-medium">Tháng 3/2024</span>
+                                <button class="btn-secondary">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-7 gap-2">
+                            <div class="text-center font-medium text-gray-500">CN</div>
+                            <div class="text-center font-medium text-gray-500">T2</div>
+                            <div class="text-center font-medium text-gray-500">T3</div>
+                            <div class="text-center font-medium text-gray-500">T4</div>
+                            <div class="text-center font-medium text-gray-500">T5</div>
+                            <div class="text-center font-medium text-gray-500">T6</div>
+                            <div class="text-center font-medium text-gray-500">T7</div>
+                            
+                            <!-- Calendar days will be dynamically generated -->
+                            <div class="text-center p-2 text-gray-400">24</div>
+                            <div class="text-center p-2 text-gray-400">25</div>
+                            <div class="text-center p-2 text-gray-400">26</div>
+                            <div class="text-center p-2 text-gray-400">27</div>
+                            <div class="text-center p-2 text-gray-400">28</div>
+                            <div class="text-center p-2 text-gray-400">29</div>
+                            <div class="text-center p-2 text-gray-400">1</div>
+                            
+                            <div class="text-center p-2 text-gray-400">2</div>
+                            <div class="text-center p-2 text-gray-400">3</div>
+                            <div class="text-center p-2 text-gray-400">4</div>
+                            <div class="text-center p-2 text-gray-400">5</div>
+                            <div class="text-center p-2 text-gray-400">6</div>
+                            <div class="text-center p-2 text-gray-400">7</div>
+                            <div class="text-center p-2 text-gray-400">8</div>
+                            
+                            <div class="text-center p-2 text-gray-400">9</div>
+                            <div class="text-center p-2 text-gray-400">10</div>
+                            <div class="text-center p-2 text-gray-400">11</div>
+                            <div class="text-center p-2 text-gray-400">12</div>
+                            <div class="text-center p-2 text-gray-400">13</div>
+                            <div class="text-center p-2 text-gray-400">14</div>
+                            <div class="text-center p-2 text-gray-400">15</div>
+                            
+                            <div class="text-center p-2 text-gray-400">16</div>
+                            <div class="text-center p-2 text-gray-400">17</div>
+                            <div class="text-center p-2 text-gray-400">18</div>
+                            <div class="text-center p-2 text-gray-400">19</div>
+                            <div class="text-center p-2 text-gray-400">20</div>
+                            <div class="text-center p-2 text-gray-400">21</div>
+                            <div class="text-center p-2 text-gray-400">22</div>
+                            
+                            <div class="text-center p-2 text-gray-400">23</div>
+                            <div class="text-center p-2 text-gray-400">24</div>
+                            <div class="text-center p-2 text-gray-400">25</div>
+                            <div class="text-center p-2 text-gray-400">26</div>
+                            <div class="text-center p-2 text-gray-400">27</div>
+                            <div class="text-center p-2 text-gray-400">28</div>
+                            <div class="text-center p-2 text-gray-400">29</div>
+                            
+                            <div class="text-center p-2 text-gray-400">30</div>
+                            <div class="text-center p-2 text-gray-400">31</div>
+                            <div class="text-center p-2 text-gray-400">1</div>
+                            <div class="text-center p-2 text-gray-400">2</div>
+                            <div class="text-center p-2 text-gray-400">3</div>
+                            <div class="text-center p-2 text-gray-400">4</div>
+                            <div class="text-center p-2 text-gray-400">5</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Statistics -->
+                <div id="statisticsTab" class="tab-content hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <h3 class="text-lg font-semibold mb-4">Phân bố hoạt động theo loại</h3>
+                            <canvas id="activityTypeChart" height="250"></canvas>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <h3 class="text-lg font-semibold mb-4">Số lượng học sinh tham gia</h3>
+                            <canvas id="participationChart" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-6">
+            <nav class="flex items-center space-x-2">
+                <button class="btn-secondary px-3 py-1">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="btn-primary px-3 py-1">1</button>
+                <button class="btn-secondary px-3 py-1">2</button>
+                <button class="btn-secondary px-3 py-1">3</button>
+                <button class="btn-secondary px-3 py-1">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </nav>
+        </div>
+    </main>
+
+    <!-- Add Activity Modal -->
+    <div id="addActivityModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Thêm hoạt động mới</h2>
+                <button class="modal-close text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addActivityForm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">Tên hoạt động</label>
+                        <input type="text" name="name" class="form-input" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Loại hoạt động</label>
+                        <select name="type" class="form-input" required>
+                            <option value="">Chọn loại</option>
+                            <option value="ACADEMIC">Học thuật</option>
+                            <option value="CULTURAL">Văn hóa</option>
+                            <option value="SPORTS">Thể thao</option>
+                            <option value="COMMUNITY">Cộng đồng</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label">Ngày bắt đầu</label>
+                        <input type="date" name="startDate" class="form-input" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Ngày kết thúc</label>
+                        <input type="date" name="endDate" class="form-input" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Địa điểm</label>
+                        <input type="text" name="location" class="form-input" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Giáo viên phụ trách</label>
+                        <select name="teacher" class="form-input" required>
+                            <option value="">Chọn giáo viên</option>
+                            <option value="GV001">GV. Nguyễn Văn A</option>
+                            <option value="GV002">GV. Trần Thị B</option>
+                            <option value="GV003">GV. Lê Văn C</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="form-label">Mô tả</label>
+                        <textarea name="description" class="form-input" rows="3" required></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button type="button" onclick="closeModal(document.getElementById('addActivityModal'))" class="btn-secondary">
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        Lưu hoạt động
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Activity Modal -->
+    <div id="editActivityModal" class="modal hidden">
+        <!-- Similar structure to Add Activity Modal -->
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Tab handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active', 'text-blue-600', 'border-blue-600'));
+                    tabButtons.forEach(btn => btn.classList.add('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'));
+                    tabContents.forEach(content => content.classList.add('hidden'));
+                    
+                    // Add active class to clicked button and corresponding content
+                    button.classList.add('active', 'text-blue-600', 'border-blue-600');
+                    button.classList.remove('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                    tabContents[index].classList.remove('hidden');
+                    
+                    // Initialize charts if on statistics tab
+                    if (index === 2) {
+                        initializeCharts();
+                    }
+                });
+            });
+            
+            // Initialize charts on page load if statistics tab is active
+            if (document.querySelector('#statisticsTab').classList.contains('active')) {
+                initializeCharts();
+            }
+        });
+        
+        // Initialize charts
+        function initializeCharts() {
+            // Activity Type Chart
+            const typeCtx = document.getElementById('activityTypeChart').getContext('2d');
+            new Chart(typeCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Học thuật', 'Văn hóa', 'Thể thao', 'Cộng đồng'],
+                    datasets: [{
+                        data: [40, 25, 20, 15],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.6)',
+                            'rgba(16, 185, 129, 0.6)',
+                            'rgba(245, 158, 11, 0.6)',
+                            'rgba(107, 114, 128, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(16, 185, 129, 1)',
+                            'rgba(245, 158, 11, 1)',
+                            'rgba(107, 114, 128, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+            
+            // Participation Chart
+            const participationCtx = document.getElementById('participationChart').getContext('2d');
+            new Chart(participationCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Học thuật', 'Văn hóa', 'Thể thao', 'Cộng đồng'],
+                    datasets: [{
+                        label: 'Số học sinh tham gia',
+                        data: [300, 200, 150, 100],
+                        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html> 

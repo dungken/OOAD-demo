@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Lớp học - SSMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 text-white shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold flex items-center group">
+                        <div class="bg-white p-3 rounded-xl mr-3 transform group-hover:rotate-12 transition duration-300">
+                            <i class="fas fa-graduation-cap text-blue-600 text-2xl"></i>
+                        </div>
+                        <span class="text-white">SSMS</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="nav-link">Trang chủ</a>
+                    <a href="students.html" class="nav-link">Quản lý học sinh</a>
+                    <a href="classes.html" class="nav-link font-medium">Lớp học</a>
+                    <a href="grades.html" class="nav-link">Điểm số</a>
+                    <a href="discipline.html" class="nav-link">Kỷ luật</a>
+                    <a href="finance.html" class="nav-link">Tài chính</a>
+                    <a href="activities.html" class="nav-link">Hoạt động</a>
+                    <a href="reports.html" class="nav-link">Báo cáo</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition duration-300 flex items-center group">
+                        <i class="fas fa-user mr-2 group-hover:rotate-12 transition duration-300"></i>
+                        Đăng nhập
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Add Class Modal -->
+        <div id="addClassModal" class="modal hidden">
+            <div class="modal-content max-w-4xl mx-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Thêm lớp học mới</h2>
+                        <p class="text-gray-600 mt-1">Nhập thông tin lớp học mới vào hệ thống</p>
+                    </div>
+                    <button class="modal-close text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="addClassForm" class="space-y-6">
+                    <!-- Basic Information Section -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                            <i class="fas fa-info-circle mr-2 text-blue-600"></i>
+                            Thông tin cơ bản
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="form-label required">Mã lớp</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-hashtag text-gray-400"></i>
+                                    </div>
+                                    <input type="text" name="classId" class="form-input pl-10" placeholder="Nhập mã lớp" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label required">Tên lớp</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-chalkboard text-gray-400"></i>
+                                    </div>
+                                    <input type="text" name="className" class="form-input pl-10" placeholder="Nhập tên lớp" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label required">Khối</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-layer-group text-gray-400"></i>
+                                    </div>
+                                    <select name="grade" class="form-input pl-10" required>
+                                        <option value="">Chọn khối</option>
+                                        <option value="10">Khối 10</option>
+                                        <option value="11">Khối 11</option>
+                                        <option value="12">Khối 12</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label required">Năm học</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-calendar-alt text-gray-400"></i>
+                                    </div>
+                                    <select name="academicYear" class="form-input pl-10" required>
+                                        <option value="">Chọn năm học</option>
+                                        <option value="2023-2024">2023-2024</option>
+                                        <option value="2022-2023">2022-2023</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Class Details Section -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                            <i class="fas fa-cog mr-2 text-blue-600"></i>
+                            Chi tiết lớp học
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="form-label required">Giáo viên chủ nhiệm</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-user-tie text-gray-400"></i>
+                                    </div>
+                                    <select name="teacher" class="form-input pl-10" required>
+                                        <option value="">Chọn giáo viên</option>
+                                        <option value="1">Nguyễn Văn A</option>
+                                        <option value="2">Trần Thị B</option>
+                                        <option value="3">Lê Văn C</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label required">Sĩ số tối đa</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-users text-gray-400"></i>
+                                    </div>
+                                    <input type="number" name="maxStudents" class="form-input pl-10" placeholder="Nhập sĩ số tối đa" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Phòng học</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-door-open text-gray-400"></i>
+                                    </div>
+                                    <input type="text" name="room" class="form-input pl-10" placeholder="Nhập phòng học">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Thời gian học</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-clock text-gray-400"></i>
+                                    </div>
+                                    <select name="schedule" class="form-input pl-10">
+                                        <option value="">Chọn thời gian</option>
+                                        <option value="morning">Sáng (7:00 - 11:30)</option>
+                                        <option value="afternoon">Chiều (13:00 - 17:30)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information Section -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                            <i class="fas fa-plus-circle mr-2 text-blue-600"></i>
+                            Thông tin bổ sung
+                        </h3>
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <label class="form-label">Ghi chú</label>
+                                <textarea name="notes" class="form-input" rows="3" placeholder="Nhập ghi chú về lớp học (nếu có)"></textarea>
+                            </div>
+                            <div>
+                                <label class="form-label">Hoạt động ngoại khóa</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="activities" value="sports" class="form-checkbox">
+                                        <span class="ml-2">Thể thao</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="activities" value="art" class="form-checkbox">
+                                        <span class="ml-2">Nghệ thuật</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="activities" value="music" class="form-checkbox">
+                                        <span class="ml-2">Âm nhạc</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="activities" value="science" class="form-checkbox">
+                                        <span class="ml-2">Khoa học</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="activities" value="other" class="form-checkbox">
+                                        <span class="ml-2">Khác</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex justify-end space-x-4">
+                        <button type="button" onclick="closeModal('addClassModal')" class="btn-secondary">
+                            <i class="fas fa-times mr-2"></i>Hủy
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save mr-2"></i>Lưu lớp học
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Page Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Quản lý Lớp học</h1>
+                <p class="text-gray-600">Quản lý thông tin và theo dõi lớp học</p>
+            </div>
+            <button onclick="openModal('addClassModal')" class="btn-primary flex items-center">
+                <i class="fas fa-plus mr-2"></i>
+                <span>Thêm lớp học</span>
+            </button>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tổng số lớp</p>
+                        <h3 class="text-2xl font-bold text-blue-600">24</h3>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-chalkboard text-blue-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>2</span>
+                    <span class="text-gray-500 text-sm ml-2">lớp mới trong tháng</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Sĩ số trung bình</p>
+                        <h3 class="text-2xl font-bold text-green-600">35</h3>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-users text-green-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>3</span>
+                    <span class="text-gray-500 text-sm ml-2">học sinh/lớp</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Lớp đạt chuẩn</p>
+                        <h3 class="text-2xl font-bold text-yellow-600">20</h3>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-award text-yellow-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>83%</span>
+                    <span class="text-gray-500 text-sm ml-2">tỷ lệ đạt chuẩn</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Giáo viên chủ nhiệm</p>
+                        <h3 class="text-2xl font-bold text-purple-600">24</h3>
+                    </div>
+                    <div class="bg-purple-100 p-3 rounded-full">
+                        <i class="fas fa-user-tie text-purple-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-500 text-sm"><i class="fas fa-check mr-1"></i>100%</span>
+                    <span class="text-gray-500 text-sm ml-2">lớp có GVCN</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                    <input type="text" placeholder="Tìm kiếm lớp học..." class="form-input pl-10">
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-layer-group text-gray-400"></i>
+                    </div>
+                    <select class="form-input pl-10">
+                        <option value="">Tất cả khối</option>
+                        <option value="10">Khối 10</option>
+                        <option value="11">Khối 11</option>
+                        <option value="12">Khối 12</option>
+                    </select>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-filter text-gray-400"></i>
+                    </div>
+                    <select class="form-input pl-10">
+                        <option value="">Trạng thái</option>
+                        <option value="active">Đang hoạt động</option>
+                        <option value="inactive">Tạm ngưng</option>
+                        <option value="graduated">Đã tốt nghiệp</option>
+                    </select>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-sort text-gray-400"></i>
+                    </div>
+                    <select class="form-input pl-10">
+                        <option value="">Sắp xếp theo</option>
+                        <option value="name">Tên lớp</option>
+                        <option value="grade">Khối</option>
+                        <option value="students">Sĩ số</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Classes Table -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Mã lớp
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Tên lớp
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Khối
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Giáo viên chủ nhiệm
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Sĩ số
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Phòng học
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Trạng thái
+                            </th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Thao tác
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">L10A1</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="h-10 w-10 flex-shrink-0">
+                                        <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                            <i class="fas fa-chalkboard text-blue-600"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">10A1</div>
+                                        <div class="text-sm text-gray-500">Lớp chuyên Toán</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    Khối 10
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="h-8 w-8 flex-shrink-0">
+                                        <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=Nguyen+Van+A&background=6366f1&color=fff" alt="">
+                                    </div>
+                                    <div class="ml-3">
+                                        <div class="text-sm font-medium text-gray-900">Nguyễn Văn A</div>
+                                        <div class="text-sm text-gray-500">GVCN</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">35/40</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">P101</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Đang hoạt động
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button onclick="openModal('viewClassModal')" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="openModal('editClassModal')" class="text-blue-600 hover:text-blue-900 mr-3">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deleteClass('L10A1')" class="text-red-600 hover:text-red-900">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <!-- Add more rows here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center justify-between mt-6">
+            <div class="flex items-center">
+                <span class="text-sm text-gray-700">
+                    Hiển thị
+                    <span class="font-medium">1</span>
+                    đến
+                    <span class="font-medium">10</span>
+                    trong số
+                    <span class="font-medium">24</span>
+                    lớp học
+                </span>
+            </div>
+            <div class="flex justify-center space-x-1">
+                <button class="btn-secondary px-3 py-1 rounded-lg">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="btn-primary px-3 py-1 rounded-lg">1</button>
+                <button class="btn-secondary px-3 py-1 rounded-lg">2</button>
+                <button class="btn-secondary px-3 py-1 rounded-lg">3</button>
+                <button class="btn-secondary px-3 py-1 rounded-lg">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+</body>
+</html> 

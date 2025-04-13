@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Tài chính - SSMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 text-white shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold flex items-center group">
+                        <div class="bg-white p-3 rounded-xl mr-3 transform group-hover:rotate-12 transition duration-300">
+                            <i class="fas fa-graduation-cap text-blue-600 text-2xl"></i>
+                        </div>
+                        <span class="text-white">SSMS</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="nav-link">Trang chủ</a>
+                    <a href="students.html" class="nav-link">Quản lý học sinh</a>
+                    <a href="classes.html" class="nav-link">Lớp học</a>
+                    <a href="grades.html" class="nav-link">Điểm số</a>
+                    <a href="discipline.html" class="nav-link">Kỷ luật</a>
+                    <a href="finance.html" class="nav-link font-medium">Tài chính</a>
+                    <a href="activities.html" class="nav-link">Hoạt động</a>
+                    <a href="reports.html" class="nav-link">Báo cáo</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition duration-300 flex items-center group">
+                        <i class="fas fa-user mr-2 group-hover:rotate-12 transition duration-300"></i>
+                        Đăng nhập
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Page Header -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Quản lý Tài chính</h1>
+            <div class="flex space-x-4">
+                <button onclick="openModal('addIncomeModal')" class="btn-primary">
+                    <i class="fas fa-plus mr-2"></i>Thêm thu
+                </button>
+                <button onclick="openModal('addExpenseModal')" class="btn-secondary">
+                    <i class="fas fa-minus mr-2"></i>Thêm chi
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tổng thu</p>
+                        <h3 class="text-2xl font-bold text-green-600">125.000.000đ</h3>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-arrow-up text-green-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>15%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tổng chi</p>
+                        <h3 class="text-2xl font-bold text-red-600">85.000.000đ</h3>
+                    </div>
+                    <div class="bg-red-100 p-3 rounded-full">
+                        <i class="fas fa-arrow-down text-red-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-red-500 text-sm"><i class="fas fa-arrow-down mr-1"></i>8%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Số dư</p>
+                        <h3 class="text-2xl font-bold text-blue-600">40.000.000đ</h3>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-wallet text-blue-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-blue-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>25%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tỷ lệ chi/thu</p>
+                        <h3 class="text-2xl font-bold text-yellow-600">68%</h3>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-chart-pie text-yellow-600"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-yellow-500 text-sm"><i class="fas fa-arrow-down mr-1"></i>5%</span>
+                    <span class="text-gray-500 text-sm ml-2">so với tháng trước</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <select class="form-input">
+                        <option value="">Loại giao dịch</option>
+                        <option value="INCOME">Thu</option>
+                        <option value="EXPENSE">Chi</option>
+                    </select>
+                </div>
+                <div>
+                    <select class="form-input">
+                        <option value="">Danh mục</option>
+                        <option value="TUITION">Học phí</option>
+                        <option value="SALARY">Lương giáo viên</option>
+                        <option value="FACILITY">Cơ sở vật chất</option>
+                        <option value="UTILITY">Tiện ích</option>
+                        <option value="OTHER">Khác</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="month" class="form-input" value="2024-03">
+                </div>
+                <div>
+                    <input type="text" placeholder="Tìm kiếm..." class="form-input">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs for different views -->
+        <div class="bg-white rounded-lg shadow-md mb-6">
+            <div class="border-b border-gray-200">
+                <nav class="flex -mb-px">
+                    <button class="tab-button active py-4 px-6 text-blue-600 border-b-2 border-blue-600 font-medium">
+                        Giao dịch
+                    </button>
+                    <button class="tab-button py-4 px-6 text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium">
+                        Biểu đồ
+                    </button>
+                    <button class="tab-button py-4 px-6 text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium">
+                        Báo cáo
+                    </button>
+                </nav>
+            </div>
+            <div class="p-4">
+                <!-- Tab Content: Transactions -->
+                <div id="transactionsTab" class="tab-content active">
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Ngày</th>
+                                    <th>Mã giao dịch</th>
+                                    <th>Loại</th>
+                                    <th>Danh mục</th>
+                                    <th>Mô tả</th>
+                                    <th>Số tiền</th>
+                                    <th>Người tạo</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>15/03/2024</td>
+                                    <td>GD001</td>
+                                    <td><span class="badge badge-success">Thu</span></td>
+                                    <td>Học phí</td>
+                                    <td>Thu học phí tháng 3</td>
+                                    <td class="text-green-600">25.000.000đ</td>
+                                    <td>Admin</td>
+                                    <td><span class="badge badge-success">Hoàn thành</span></td>
+                                    <td>
+                                        <button onclick="openModal('editTransactionModal')" class="text-blue-600 hover:text-blue-800 mr-2">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteTransaction('GD001')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>16/03/2024</td>
+                                    <td>GD002</td>
+                                    <td><span class="badge badge-danger">Chi</span></td>
+                                    <td>Lương giáo viên</td>
+                                    <td>Chi lương tháng 3</td>
+                                    <td class="text-red-600">45.000.000đ</td>
+                                    <td>Admin</td>
+                                    <td><span class="badge badge-success">Hoàn thành</span></td>
+                                    <td>
+                                        <button onclick="openModal('editTransactionModal')" class="text-blue-600 hover:text-blue-800 mr-2">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteTransaction('GD002')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>17/03/2024</td>
+                                    <td>GD003</td>
+                                    <td><span class="badge badge-success">Thu</span></td>
+                                    <td>Học phí</td>
+                                    <td>Thu học phí tháng 3</td>
+                                    <td class="text-green-600">30.000.000đ</td>
+                                    <td>Admin</td>
+                                    <td><span class="badge badge-warning">Đang xử lý</span></td>
+                                    <td>
+                                        <button onclick="openModal('editTransactionModal')" class="text-blue-600 hover:text-blue-800 mr-2">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteTransaction('GD003')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>18/03/2024</td>
+                                    <td>GD004</td>
+                                    <td><span class="badge badge-danger">Chi</span></td>
+                                    <td>Cơ sở vật chất</td>
+                                    <td>Mua sắm thiết bị</td>
+                                    <td class="text-red-600">15.000.000đ</td>
+                                    <td>Admin</td>
+                                    <td><span class="badge badge-success">Hoàn thành</span></td>
+                                    <td>
+                                        <button onclick="openModal('editTransactionModal')" class="text-blue-600 hover:text-blue-800 mr-2">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteTransaction('GD004')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>19/03/2024</td>
+                                    <td>GD005</td>
+                                    <td><span class="badge badge-danger">Chi</span></td>
+                                    <td>Tiện ích</td>
+                                    <td>Tiền điện nước</td>
+                                    <td class="text-red-600">5.000.000đ</td>
+                                    <td>Admin</td>
+                                    <td><span class="badge badge-success">Hoàn thành</span></td>
+                                    <td>
+                                        <button onclick="openModal('editTransactionModal')" class="text-blue-600 hover:text-blue-800 mr-2">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteTransaction('GD005')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Charts -->
+                <div id="chartsTab" class="tab-content hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <h3 class="text-lg font-semibold mb-4">Thu chi theo tháng</h3>
+                            <canvas id="monthlyChart" height="250"></canvas>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <h3 class="text-lg font-semibold mb-4">Phân bố chi tiêu</h3>
+                            <canvas id="expenseChart" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Reports -->
+                <div id="reportsTab" class="tab-content hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <h3 class="text-lg font-semibold mb-4">Báo cáo thu</h3>
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Danh mục</th>
+                                            <th>Số lượng</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Tỷ lệ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Học phí</td>
+                                            <td>150</td>
+                                            <td>75.000.000đ</td>
+                                            <td>60%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Phí hoạt động</td>
+                                            <td>50</td>
+                                            <td>25.000.000đ</td>
+                                            <td>20%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Khác</td>
+                                            <td>25</td>
+                                            <td>25.000.000đ</td>
+                                            <td>20%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <h3 class="text-lg font-semibold mb-4">Báo cáo chi</h3>
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Danh mục</th>
+                                            <th>Số lượng</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Tỷ lệ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Lương giáo viên</td>
+                                            <td>1</td>
+                                            <td>45.000.000đ</td>
+                                            <td>53%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Cơ sở vật chất</td>
+                                            <td>3</td>
+                                            <td>20.000.000đ</td>
+                                            <td>24%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tiện ích</td>
+                                            <td>2</td>
+                                            <td>10.000.000đ</td>
+                                            <td>12%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Khác</td>
+                                            <td>4</td>
+                                            <td>10.000.000đ</td>
+                                            <td>11%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-6">
+            <nav class="flex items-center space-x-2">
+                <button class="btn-secondary px-3 py-1">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="btn-primary px-3 py-1">1</button>
+                <button class="btn-secondary px-3 py-1">2</button>
+                <button class="btn-secondary px-3 py-1">3</button>
+                <button class="btn-secondary px-3 py-1">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </nav>
+        </div>
+    </main>
+
+    <!-- Add Income Modal -->
+    <div id="addIncomeModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Thêm khoản thu</h2>
+                <button class="modal-close text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addIncomeForm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">Danh mục</label>
+                        <select name="category" class="form-input" required>
+                            <option value="">Chọn danh mục</option>
+                            <option value="TUITION">Học phí</option>
+                            <option value="ACTIVITY">Phí hoạt động</option>
+                            <option value="OTHER">Khác</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label">Số tiền</label>
+                        <input type="number" name="amount" class="form-input" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Ngày</label>
+                        <input type="date" name="date" class="form-input" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Phương thức thanh toán</label>
+                        <select name="paymentMethod" class="form-input" required>
+                            <option value="">Chọn phương thức</option>
+                            <option value="CASH">Tiền mặt</option>
+                            <option value="BANK">Chuyển khoản</option>
+                            <option value="CARD">Thẻ</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="form-label">Mô tả</label>
+                        <textarea name="description" class="form-input" rows="3" required></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button type="button" onclick="closeModal(document.getElementById('addIncomeModal'))" class="btn-secondary">
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        Lưu khoản thu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Expense Modal -->
+    <div id="addExpenseModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Thêm khoản chi</h2>
+                <button class="modal-close text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addExpenseForm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">Danh mục</label>
+                        <select name="category" class="form-input" required>
+                            <option value="">Chọn danh mục</option>
+                            <option value="SALARY">Lương giáo viên</option>
+                            <option value="FACILITY">Cơ sở vật chất</option>
+                            <option value="UTILITY">Tiện ích</option>
+                            <option value="OTHER">Khác</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label">Số tiền</label>
+                        <input type="number" name="amount" class="form-input" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Ngày</label>
+                        <input type="date" name="date" class="form-input" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Phương thức thanh toán</label>
+                        <select name="paymentMethod" class="form-input" required>
+                            <option value="">Chọn phương thức</option>
+                            <option value="CASH">Tiền mặt</option>
+                            <option value="BANK">Chuyển khoản</option>
+                            <option value="CARD">Thẻ</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="form-label">Mô tả</label>
+                        <textarea name="description" class="form-input" rows="3" required></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button type="button" onclick="closeModal(document.getElementById('addExpenseModal'))" class="btn-secondary">
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        Lưu khoản chi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Transaction Modal -->
+    <div id="editTransactionModal" class="modal hidden">
+        <!-- Similar structure to Add Income/Expense Modal -->
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Tab handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active', 'text-blue-600', 'border-blue-600'));
+                    tabButtons.forEach(btn => btn.classList.add('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'));
+                    tabContents.forEach(content => content.classList.add('hidden'));
+                    
+                    // Add active class to clicked button and corresponding content
+                    button.classList.add('active', 'text-blue-600', 'border-blue-600');
+                    button.classList.remove('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                    tabContents[index].classList.remove('hidden');
+                    
+                    // Initialize charts if on chart tab
+                    if (index === 1) {
+                        initializeCharts();
+                    }
+                });
+            });
+            
+            // Initialize charts on page load if chart tab is active
+            if (document.querySelector('#chartsTab').classList.contains('active')) {
+                initializeCharts();
+            }
+        });
+        
+        // Initialize charts
+        function initializeCharts() {
+            // Monthly Income/Expense Chart
+            const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+            new Chart(monthlyCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+                    datasets: [{
+                        label: 'Thu',
+                        data: [100, 110, 125, 130, 120, 115, 125, 130, 125, 120, 125, 125],
+                        backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                        borderColor: 'rgba(34, 197, 94, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Chi',
+                        data: [80, 85, 90, 85, 80, 85, 90, 85, 80, 85, 90, 85],
+                        backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Expense Distribution Chart
+            const expenseCtx = document.getElementById('expenseChart').getContext('2d');
+            new Chart(expenseCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Lương giáo viên', 'Cơ sở vật chất', 'Tiện ích', 'Khác'],
+                    datasets: [{
+                        data: [53, 24, 12, 11],
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.6)',
+                            'rgba(59, 130, 246, 0.6)',
+                            'rgba(16, 185, 129, 0.6)',
+                            'rgba(245, 158, 11, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(239, 68, 68, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(16, 185, 129, 1)',
+                            'rgba(245, 158, 11, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+    </script>
+</body>
+</html> 

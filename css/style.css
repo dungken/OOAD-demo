@@ -1,0 +1,158 @@
+/* Custom styles */
+.transition-all {
+    transition: all 0.3s ease;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Custom components */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom form styles */
+.form-input {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.form-label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+}
+
+/* Custom button styles */
+.btn-primary {
+    @apply bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors;
+}
+
+.btn-secondary {
+    @apply bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors;
+}
+
+/* Custom table styles */
+.table-container {
+    @apply overflow-x-auto;
+}
+
+.table {
+    @apply min-w-full divide-y divide-gray-200;
+}
+
+.table th {
+    @apply px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+.table td {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
+}
+
+.table tbody tr {
+    @apply hover:bg-gray-50;
+}
+
+/* Custom modal styles */
+.modal {
+    @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+    @apply bg-white rounded-lg shadow-xl p-6 max-w-2xl w-full mx-4;
+}
+
+/* Custom alert styles */
+.alert {
+    @apply p-4 rounded-lg mb-4;
+}
+
+.alert-success {
+    @apply bg-green-100 text-green-800;
+}
+
+.alert-error {
+    @apply bg-red-100 text-red-800;
+}
+
+.alert-warning {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+.alert-info {
+    @apply bg-blue-100 text-blue-800;
+}
+
+/* Navigation styles */
+.nav-link {
+    @apply text-white hover:text-blue-200 transition-colors;
+}
+
+.nav-link.active {
+    @apply text-blue-200 font-semibold;
+}
+
+/* Card styles */
+.card-header {
+    @apply flex items-center justify-between mb-4;
+}
+
+.card-title {
+    @apply text-lg font-semibold text-gray-800;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .table-container {
+        @apply -mx-4;
+    }
+    
+    .modal-content {
+        @apply mx-2;
+    }
+}
+
+/* Animation styles */
+.fade-enter {
+    opacity: 0;
+}
+
+.fade-enter-active {
+    opacity: 1;
+    transition: opacity 200ms ease-in;
+}
+
+.fade-exit {
+    opacity: 1;
+}
+
+.fade-exit-active {
+    opacity: 0;
+    transition: opacity 200ms ease-in;
+}
+
+/* Print styles */
+@media print {
+    .no-print {
+        display: none;
+    }
+    
+    .print-only {
+        display: block;
+    }
+} 
